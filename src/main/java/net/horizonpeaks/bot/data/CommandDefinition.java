@@ -4,43 +4,50 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
+import java.util.EnumSet;
 import java.util.List;
 
+import net.dv8tion.jda.api.Permission;
 import net.horizonpeaks.bot.actions.Action;
 
 /**
  * Describes a slash command loaded from {@code commands.yaml}.
  *
- * <p>Each definition contains the information required to register the
+ * <p>
+ * Each definition contains the information required to register the
  * command with Discord, as well as the response text or custom action
- * associated with the command.</p>
+ * associated with the command.
+ * </p>
  *
- * @param name the slash command name, without the leading {@code /}
+ * @param name        the slash command name, without the leading {@code /}
  * @param description the description shown by Discord for the command
- * @param text optional static response text
- * @param arguments optional list of slash command arguments
- * @param action optional custom action implemented in Java
+ * @param text        optional static response text
+ * @param arguments   optional list of slash command arguments
+ * @param action      optional custom action implemented in Java
  */
 public record CommandDefinition(
         String name,
         String description,
         String text,
         List<Embed> embeds,
+        List<String> permissions,
         List<ArgumentDefinition> arguments,
         Action action) {
 
-    private static final ObjectMapper MAPPER =
-            new ObjectMapper(new YAMLFactory());
+    private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
 
     /**
      * Parses a YAML document containing a list of command definitions.
      *
-     * <p>YAML property names are automatically matched to the corresponding
-     * record components by Jackson.</p>
+     * <p>
+     * YAML property names are automatically matched to the corresponding
+     * record components by Jackson.
+     * </p>
      *
      * @param yaml the contents of {@code commands.yaml}
      * @return the parsed command definitions
@@ -60,8 +67,10 @@ public record CommandDefinition(
     /**
      * Converts this definition into a JDA slash command definition.
      *
-     * <p>Arguments are currently registered as string options. Additional
-     * Discord option types can be supported later if needed.</p>
+     * <p>
+     * Arguments are currently registered as string options. Additional
+     * Discord option types can be supported later if needed.
+     * </p>
      *
      * @return the JDA slash command representation of this definition
      */
@@ -76,6 +85,21 @@ public record CommandDefinition(
                         argument.description(),
                         argument.required());
             }
+        }
+
+        // If permissions defined, set them. Otherwise, everyone
+        if (permissions != null && !permissions.isEmpty()) {
+            EnumSet<Permission> requiredPermissions = EnumSet.noneOf(Permission.class);
+
+            // Add permissions to a set
+            for (String permission : permissions) {
+                requiredPermissions.add(
+                        Permission.valueOf(permission.toUpperCase()));
+            }
+
+            // Set the list
+            command.setDefaultPermissions(
+                    DefaultMemberPermissions.enabledFor(requiredPermissions));
         }
 
         return command;
