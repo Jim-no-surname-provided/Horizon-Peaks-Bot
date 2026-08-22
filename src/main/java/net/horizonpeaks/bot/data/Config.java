@@ -30,6 +30,7 @@ public record Config(
         Suggestions suggestions) {
 
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
+    private static Config instance;
 
     /**
      * Represents general Horizon Peaks branding.
@@ -145,9 +146,24 @@ public record Config(
      */
     public static Config fromYaml(String yaml) {
         try {
-            return MAPPER.readValue(yaml, Config.class);
+            instance = MAPPER.readValue(yaml, Config.class);
+            return instance;
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Invalid config.yaml", e);
         }
+    }
+
+    /**
+     * Returns the active bot configuration.
+     *
+     * @return the loaded configuration
+     * @throws IllegalStateException if the configuration has not been loaded yet
+     */
+    public static Config get() {
+        if (instance == null) {
+            throw new IllegalStateException("Config has not been loaded");
+        }
+
+        return instance;
     }
 }

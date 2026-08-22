@@ -2,8 +2,9 @@ package net.horizonpeaks.bot;
 
 import java.util.List;
 
+import net.horizonpeaks.bot.actions.SuggestionSubmission;
 import net.horizonpeaks.bot.data.CommandDefinition;
-
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.horizonpeaks.bot.data.Config;
@@ -50,8 +51,26 @@ public final class BotListener extends ListenerAdapter {
             }
 
             msgSender.render(command, event);
-            return; 
+            return;
 
+        }
+    }
+
+    /**
+     * Handles submitted Discord modals.
+     *
+     * <p>
+     * Suggestion submissions are forwarded to {@link SuggestionSubmission}
+     * when the submitted modal matches the suggestion form.
+     * </p>
+     *
+     * @param event the submitted modal interaction
+     */
+    @Override
+    public void onModalInteraction(ModalInteractionEvent event) {
+        if (event.getModalId().equals("suggestion:submit")) {
+            SuggestionSubmission.submit(event);
+            return;
         }
     }
 }

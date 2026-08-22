@@ -41,9 +41,9 @@
 #   %suggestions.finalExtensionDays%
 #   %suggestions.maxActivePerUser%
 #
-# Command arguments are available as placeholders using their argument name.
-# Missing permissions means everyone can use the command.
-#
+# Command arguments are available as placeholders using their argument name
+# Missing permissions means everyone can use the command
+
 - name: info
   permissions:
   - administrator
@@ -85,6 +85,7 @@
 
       **[%links.website%](%links.website%)**
     color: '%colors.brand%'
+
 - name: map
   description: Show the Horizon Peaks world map
   embeds:
@@ -95,6 +96,7 @@
 
       **[%links.map%](%links.map%)**
     color: '%colors.brand%'
+
 - name: vote
   description: Show the Horizon Peaks voting page
   embeds:
@@ -105,9 +107,11 @@
 
       **[%links.vote%](%links.vote%)**
     color: '%colors.brand%'
+
 - name: ping
   description: Check bot latency
   action: Ping
+
 - name: verify
   description: Show the Horizon Peaks verification guide
   embeds:
@@ -134,6 +138,7 @@
     - name: ⚠️ Important
       value: There are two linking bots/server linking commands. Make sure you use the appropriate one.
       inline: false
+
 - name: help
   description: Show available Horizon Peaks commands
   embeds:
@@ -160,8 +165,9 @@
       value: Show this help message
       inline: false
     - name: /suggestion
-      value: Submit a community suggestion
+      value: Submit a community suggestion. This can be used in \#📝｜suggestions .
       inline: false
+
 - name: rules
   permissions:
   - administrator
@@ -283,6 +289,7 @@
       **[7.4] No Abusive Behavior**
       Do not join voice calls only to be obnoxious or disruptive, and then leave immediately.
     color: '%colors.brand%'
+
 - name: vip-perks
   permissions:
   - administrator
@@ -310,6 +317,7 @@
       Exclusive Discord channel
     color: '%colors.vip%'
     thumbnail: '%images.vip%'
+
 - name: booster-perks
   permissions:
   - administrator
@@ -339,6 +347,7 @@
     color: '%colors.booster%'
     thumbnail: '%images.booster%'
     footer: Monthly based • perks will be removed if the boost has ended
+
 - name: announce
   permissions:
   - administrator
@@ -348,14 +357,17 @@
     description: Name of the announcement to post
     required: true
   action: Announce
+
 - name: suggestion
   description: Submit a community suggestion
-  action: Suggestion
+  action: SuggestionModal
+
 - name: suggestion-info
   permissions:
   - administrator
   description: Post information about the suggestion system
   action: SuggestionInfo
+
 - name: suggestion-approve
   permissions:
   - administrator
@@ -368,6 +380,7 @@
     description: Optional reason for approving the suggestion
     required: false
   action: SuggestionApprove
+
 - name: suggestion-reject
   permissions:
   - administrator
@@ -380,6 +393,7 @@
     description: Optional reason for rejecting the suggestion
     required: false
   action: SuggestionReject
+
 - name: suggestion-repurpose
   permissions:
   - administrator
