@@ -22,6 +22,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * {@code commands.yaml}. Commands with an action execute their Java behavior,
  * while declarative commands are rendered from their configured response.
  * </p>
+ *
+ * <p>
+ * The listener also handles suggestion forms and voting, as well as member
+ * join behavior such as welcome messages and role assignment.
+ * </p>
  */
 public final class BotListener extends ListenerAdapter {
 
@@ -29,9 +34,11 @@ public final class BotListener extends ListenerAdapter {
     private final Config config;
 
     /**
-     * Creates a listener using the configured slash commands.
+     * Creates a listener using the configured slash commands and bot
+     * configuration.
      *
      * @param commands command definitions loaded from {@code commands.yaml}
+     * @param config general bot configuration
      */
     public BotListener(List<CommandDefinition> commands, Config config) {
         this.commands = commands;
@@ -40,6 +47,11 @@ public final class BotListener extends ListenerAdapter {
 
     /**
      * Handles an invoked slash command.
+     *
+     * <p>
+     * Commands with an associated action execute that action directly.
+     * Declarative commands are rendered through {@link MsgSender}.
+     * </p>
      *
      * @param event the Discord slash command interaction
      */
@@ -79,6 +91,16 @@ public final class BotListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * Handles reactions added to messages.
+     *
+     * <p>
+     * Reactions added by the bot itself are ignored. Reactions in the active
+     * suggestions channel are forwarded to {@link Voting}.
+     * </p>
+     *
+     * @param event the reaction-add event
+     */
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         // Ignore the bot's own seed reactions
@@ -86,19 +108,35 @@ public final class BotListener extends ListenerAdapter {
             return;
         }
 
-        // If suggestions channel
+        // Forward reactions from the active suggestions channel
         String activeChannelId = config.channels().activeSuggestions();
         if (event.getChannel().getId().equals(activeChannelId)) {
             Voting.handle(event);
         }
     }
 
+    /**
+     * Handles members joining the guild.
+     *
+     * <p>
+     * New members receive the configured member role and are greeted with the
+     * configured welcome message.
+     * </p>
+     *
+     * @param event the member-join event
+     */
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         Welcome.welcome(event);
         assignMemberRole(event);
     }
 
+    /**
+     * Assigns the configured member role to a newly joined member.
+     *
+     * @param event the member-join event
+     * @throws IllegalStateException if the configured member role does not exist
+     */
     private void assignMemberRole(GuildMemberJoinEvent event) {
         Member member = event.getMember();
         Role memberRole = event.getGuild().getRoleById(Config.get().roles().member());
