@@ -3,9 +3,9 @@ package net.horizonpeaks.bot;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import net.horizonpeaks.bot.data.CommandDefinition;
-import net.horizonpeaks.bot.data.Config;
 import net.horizonpeaks.bot.data.Embed;
 import net.horizonpeaks.bot.data.EmbedField;
 
@@ -27,16 +27,7 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
  * </p>
  */
 public final class MsgSender {
-
-    private final Config config;
-
-    /**
-     * Creates a renderer using the bot configuration.
-     *
-     * @param config general bot configuration
-     */
-    public MsgSender(Config config) {
-        this.config = config;
+    private MsgSender() {
     }
 
     /**
@@ -45,7 +36,7 @@ public final class MsgSender {
      * @param command the command definition to render
      * @param event   the slash command interaction that triggered the response
      */
-    public void render(CommandDefinition command, SlashCommandInteractionEvent event) {
+    public static void render(CommandDefinition command, SlashCommandInteractionEvent event) {
         // Make message reply
         ReplyCallbackAction reply = event.deferReply();
 
@@ -60,7 +51,7 @@ public final class MsgSender {
             List<MessageEmbed> embeds = new ArrayList<>();
 
             for (Embed embed : command.embeds()) {
-                embeds.add(renderEmbed(embed, event));
+                embeds.add(renderEmbed(embed, value -> resolve(value, event)));
             }
 
             reply = reply.addEmbeds(embeds);
@@ -77,9 +68,9 @@ public final class MsgSender {
      * @param event the current slash command interaction
      * @return the rendered JDA embed
      */
-    private MessageEmbed renderEmbed(Embed embed, SlashCommandInteractionEvent event) {
+    public static MessageEmbed renderEmbed(Embed embed, Function<String, String> resolver) {
         // Replace placeholders with their values
-        Embed resolved = embed.resolved(value -> resolve(value, event));
+        Embed resolved = embed.resolved(resolver);
 
         EmbedBuilder builder = new EmbedBuilder()
                 .setTitle(resolved.title(), resolved.url())
@@ -98,6 +89,46 @@ public final class MsgSender {
         return builder.build();
     }
 
+    public static String resolveConfig(String value) {
+        Config config = Config.get();
+        if (value == null) {
+            return null;
+        }
+
+        return value
+                .replace("%branding.name%", config.branding().name())
+                .replace("%branding.banner%", config.branding().banner())
+
+                .replace("%servers.network%", config.servers().network())
+                .replace("%servers.smp%", config.servers().smp())
+                .replace("%servers.creative%", config.servers().creative())
+
+                .replace("%links.website%", config.links().website())
+                .replace("%links.map%", config.links().map())
+                .replace("%links.vote%", config.links().vote())
+
+                .replace("%colors.brand%", config.colors().brand())
+                .replace("%colors.success%", config.colors().success())
+                .replace("%colors.error%", config.colors().error())
+                .replace("%colors.vip%", config.colors().vip())
+                .replace("%colors.booster%", config.colors().booster())
+
+                .replace("%images.vip%", config.images().vip())
+                .replace("%images.booster%", config.images().booster())
+
+                .replace("%channels.welcome%", config.channels().welcome())
+                .replace("%channels.communityInfo%", config.channels().communityInfo())
+                .replace("%channels.activeSuggestions%", config.channels().activeSuggestions())
+                .replace("%channels.approvedSuggestions%", config.channels().approvedSuggestions())
+                .replace("%channels.deniedSuggestions%", config.channels().deniedSuggestions())
+
+                .replace("%suggestions.initialDays%", String.valueOf(config.suggestions().initialDays()))
+                .replace("%suggestions.minimumVotes%", String.valueOf(config.suggestions().minimumVotes()))
+                .replace("%suggestions.extensionDays%", String.valueOf(config.suggestions().extensionDays()))
+                .replace("%suggestions.maxActivePerUser%", String.valueOf(config.suggestions().maxActivePerUser()));
+
+    }
+
     /**
      * Resolves placeholders in configured text.
      *
@@ -105,7 +136,9 @@ public final class MsgSender {
      * @param event the current slash command interaction
      * @return the resolved text, or {@code null} if the input was {@code null}
      */
-    private String resolve(String value, SlashCommandInteractionEvent event) {
+    private static String resolve(String value, SlashCommandInteractionEvent event) {
+        Config config = Config.get();
+
         if (value == null) {
             return null;
         }
@@ -145,38 +178,7 @@ public final class MsgSender {
         }
 
         // Config values
-        resolved = resolved
-                .replace("%branding.name%", config.branding().name())
-                .replace("%branding.banner%", config.branding().banner())
-
-                .replace("%servers.network%", config.servers().network())
-                .replace("%servers.smp%", config.servers().smp())
-                .replace("%servers.creative%", config.servers().creative())
-
-                .replace("%links.website%", config.links().website())
-                .replace("%links.map%", config.links().map())
-                .replace("%links.vote%", config.links().vote())
-
-                .replace("%colors.brand%", config.colors().brand())
-                .replace("%colors.success%", config.colors().success())
-                .replace("%colors.error%", config.colors().error())
-                .replace("%colors.vip%", config.colors().vip())
-                .replace("%colors.booster%", config.colors().booster())
-
-                .replace("%images.vip%", config.images().vip())
-                .replace("%images.booster%", config.images().booster())
-
-                .replace("%channels.welcome%", config.channels().welcome())
-                .replace("%channels.communityInfo%", config.channels().communityInfo())
-                .replace("%channels.activeSuggestions%", config.channels().activeSuggestions())
-                .replace("%channels.approvedSuggestions%", config.channels().approvedSuggestions())
-                .replace("%channels.deniedSuggestions%", config.channels().deniedSuggestions())
-
-                .replace("%suggestions.initialDays%", String.valueOf(config.suggestions().initialDays()))
-                .replace("%suggestions.minimumVotes%", String.valueOf(config.suggestions().minimumVotes()))
-                .replace("%suggestions.firstExtensionDays%", String.valueOf(config.suggestions().firstExtensionDays()))
-                .replace("%suggestions.finalExtensionDays%", String.valueOf(config.suggestions().finalExtensionDays()))
-                .replace("%suggestions.maxActivePerUser%", String.valueOf(config.suggestions().maxActivePerUser()));
+        resolved = resolveConfig(resolved);
 
         return resolved;
     }
@@ -188,7 +190,7 @@ public final class MsgSender {
      * @return the parsed color
      * @throws IllegalArgumentException if the color is invalid
      */
-    private Color parseColor(String value) {
+    private static Color parseColor(String value) {
         if (value == null || value.isBlank()) {
             return null;
         }

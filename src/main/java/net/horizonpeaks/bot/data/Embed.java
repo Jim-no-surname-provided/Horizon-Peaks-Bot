@@ -2,6 +2,8 @@ package net.horizonpeaks.bot.data;
 
 import java.util.List;
 import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
+
 
 /**
  * Describes a Discord embed loaded from configuration.
@@ -21,14 +23,14 @@ import java.util.function.Function;
  * @param fields      optional list of embed fields
  */
 public record Embed(
-        String title,
-        String url,
-        String description,
-        String color,
-        String thumbnail,
-        String image,
-        String footer,
-        List<EmbedField> fields) {
+        @Nullable String title,
+        @Nullable String url,
+        @Nullable String description,
+        @Nullable String color,
+        @Nullable String thumbnail,
+        @Nullable String image,
+        @Nullable String footer,
+        @Nullable List<EmbedField> fields) {
 
     public Embed resolved(Function<String, String> resolver) {
         return new Embed(

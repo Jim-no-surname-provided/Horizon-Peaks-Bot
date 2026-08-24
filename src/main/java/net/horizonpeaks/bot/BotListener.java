@@ -2,12 +2,17 @@ package net.horizonpeaks.bot;
 
 import java.util.List;
 
-import net.horizonpeaks.bot.actions.SuggestionSubmission;
+import net.horizonpeaks.bot.actions.Welcome;
+import net.horizonpeaks.bot.actions.suggestions.Submission;
+import net.horizonpeaks.bot.actions.suggestions.Voting;
 import net.horizonpeaks.bot.data.CommandDefinition;
+import net.horizonpeaks.bot.data.FileLoader;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.horizonpeaks.bot.data.Config;
 
 /**
  * Handles Discord events received by the bot.
@@ -21,7 +26,7 @@ import net.horizonpeaks.bot.data.Config;
 public final class BotListener extends ListenerAdapter {
 
     private final List<CommandDefinition> commands;
-    private final MsgSender msgSender;
+    private final Config config;
 
     /**
      * Creates a listener using the configured slash commands.
@@ -30,7 +35,7 @@ public final class BotListener extends ListenerAdapter {
      */
     public BotListener(List<CommandDefinition> commands, Config config) {
         this.commands = commands;
-        this.msgSender = new MsgSender(config);
+        this.config = config;
     }
 
     /**
@@ -50,7 +55,7 @@ public final class BotListener extends ListenerAdapter {
                 return;
             }
 
-            msgSender.render(command, event);
+            MsgSender.render(command, event);
             return;
 
         }
@@ -60,7 +65,7 @@ public final class BotListener extends ListenerAdapter {
      * Handles submitted Discord modals.
      *
      * <p>
-     * Suggestion submissions are forwarded to {@link SuggestionSubmission}
+     * Suggestion submissions are forwarded to {@link Submission}
      * when the submitted modal matches the suggestion form.
      * </p>
      *
@@ -69,8 +74,27 @@ public final class BotListener extends ListenerAdapter {
     @Override
     public void onModalInteraction(ModalInteractionEvent event) {
         if (event.getModalId().equals("suggestion:submit")) {
-            SuggestionSubmission.submit(event);
+            Submission.submit(event);
             return;
         }
+    }
+
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent event) {
+        // Ignore the bot's own seed reactions
+        if (event.getUserId().equals(event.getJDA().getSelfUser().getId())) {
+            return;
+        }
+
+        // If suggestions channel
+        String activeChannelId = config.channels().activeSuggestions();
+        if (event.getChannel().getId().equals(activeChannelId)) {
+            Voting.handle(event);
+        }
+    }
+
+    @Override
+    public void onGuildMemberJoin(GuildMemberJoinEvent event) {
+        Welcome.welcome(event);
     }
 }

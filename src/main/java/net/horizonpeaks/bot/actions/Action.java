@@ -53,10 +53,11 @@ public interface Action {
             return null;
         }
 
+        String RED = "\u001B[31m";
+        String RESET = "\u001B[0m";
         try {
             // Get class from its name
-            Class<?> actionClass = Class.forName(
-                    Action.class.getPackageName() + "." + name);
+            Class<?> actionClass = Class.forName(Action.class.getPackageName() + "." + name);
 
             // Make new instance from that class
             return actionClass
@@ -65,12 +66,14 @@ public interface Action {
                     .newInstance();
 
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(
-                    "Action class does not exist: " + name, e);
+            System.err.println(RED + "Action class does not exist: " + name + RESET);
+            System.exit(1);
+            return null;
 
         } catch (ReflectiveOperationException | ClassCastException e) {
-            throw new IllegalArgumentException(
-                    "Invalid action class: " + name, e);
+            System.err.println(RED + "Invalid action class: " + name + RESET);
+            System.exit(1);
+            return null;
         }
     }
 }

@@ -1,18 +1,17 @@
-package net.horizonpeaks.bot.actions;
+package net.horizonpeaks.bot.actions.suggestions;
 
 import net.dv8tion.jda.api.components.label.Label;
 import net.dv8tion.jda.api.components.textdisplay.TextDisplay;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.modals.Modal;
-
-import net.horizonpeaks.bot.data.Config;
+import net.horizonpeaks.bot.Config;
+import net.horizonpeaks.bot.actions.Action;
 
 /**
  * Starts the community suggestion submission process.
  */
-public final class SuggestionModal implements Action {
+public final class Modal implements Action {
 
     private final Config config = Config.get();
 
@@ -23,7 +22,7 @@ public final class SuggestionModal implements Action {
      */
     @Override
     public void act(SlashCommandInteractionEvent event) {
-        Modal modal = buildModal();
+        net.dv8tion.jda.api.modals.Modal modal = buildModal();
         event.replyModal(modal).queue();
     }
 
@@ -32,7 +31,7 @@ public final class SuggestionModal implements Action {
      *
      * @return the suggestion modal
      */
-    private Modal buildModal() {
+    private net.dv8tion.jda.api.modals.Modal buildModal() {
         // Add submission information above the form
         TextDisplay disclaimer = TextDisplay.of(buildDisclaimer());
 
@@ -60,7 +59,7 @@ public final class SuggestionModal implements Action {
                 .build();
 
         // Assemble the modal
-        return Modal.create("suggestion:submit", "Submit a Suggestion")
+        return net.dv8tion.jda.api.modals.Modal.create("suggestion:submit", "Submit a Suggestion")
                 .addComponents(
                         disclaimer,
                         Label.of("Title", title),
@@ -82,15 +81,14 @@ public final class SuggestionModal implements Action {
                 **Before submitting, please note:**
 
                 • Suggestions initially stay open for **%d days**
-                • If there are not enough votes, they may be extended by **%d days**, then by **%d final day**
+                • If there are not enough votes, they may be extended by **%d days**
                 • At least **%d total votes** are required
                 • You may have at most **%d active suggestions**
                 • Administrators may approve or reject suggestions at any time
                 • Denied suggestions may be submitted again, but please do not spam them
                 """.formatted(
                 suggestions.initialDays(),
-                suggestions.firstExtensionDays(),
-                suggestions.finalExtensionDays(),
+                suggestions.extensionDays(),
                 suggestions.minimumVotes(),
                 suggestions.maxActivePerUser());
     }

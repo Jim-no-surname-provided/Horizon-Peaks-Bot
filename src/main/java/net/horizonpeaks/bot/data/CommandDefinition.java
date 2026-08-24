@@ -93,13 +93,11 @@ public record CommandDefinition(
 
             // Add permissions to a set
             for (String permission : permissions) {
-                requiredPermissions.add(
-                        Permission.valueOf(permission.toUpperCase()));
+                requiredPermissions.add(Permission.valueOf(permission.toUpperCase()));
             }
 
             // Set the list
-            command.setDefaultPermissions(
-                    DefaultMemberPermissions.enabledFor(requiredPermissions));
+            command.setDefaultPermissions(DefaultMemberPermissions.enabledFor(requiredPermissions));
         }
 
         return command;

@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.horizonpeaks.bot.data.CommandDefinition;
-import net.horizonpeaks.bot.data.Config;
 import net.horizonpeaks.bot.data.Environment;
 import net.horizonpeaks.bot.data.FileLoader;
 
@@ -26,12 +25,14 @@ public final class Main {
         String guildId = environment.discordGuildId();
 
         // Load config
-        Config config = Config.fromYaml(
-                FileLoader.readOrCreate("config.yaml", "config.yaml"));
+        Config config = Config.fromYaml(FileLoader.readOrCreate("config.yaml", "config.yaml"));
 
         // Load commands
         List<CommandDefinition> commands = CommandDefinition.fromYaml(
                 FileLoader.readOrCreate("commands.yaml", "commands.yaml"));
+
+        // Load welcome.md
+        FileLoader.readOrCreate("messages/welcome.md", "messages/welcome.md");
 
         // Build bot
         JDA jda;

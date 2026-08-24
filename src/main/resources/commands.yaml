@@ -37,8 +37,7 @@
 #   %channels.deniedSuggestions%
 #   %suggestions.initialDays%
 #   %suggestions.minimumVotes%
-#   %suggestions.firstExtensionDays%
-#   %suggestions.finalExtensionDays%
+#   %suggestions.extensionDays%
 #   %suggestions.maxActivePerUser%
 #
 # Command arguments are available as placeholders using their argument name
@@ -360,46 +359,62 @@
 
 - name: suggestion
   description: Submit a community suggestion
-  action: SuggestionModal
+  action: suggestions.Modal
 
 - name: suggestion-info
   permissions:
-  - administrator
+    - administrator
   description: Post information about the suggestion system
-  action: SuggestionInfo
+  embeds:
+    - title: "📋 Community Suggestions"
+      color: "%colors.brand%"
+      description: |
+        Have an idea to improve the server?
+        Submit a suggestion and let the community vote on it!
+
+        ## How to Submit
+
+        Use the `/suggestion` command in this channel.
+        You'll see the rules, then fill out a short form with your idea.
+
+        ## Voting
+
+        ✅ - Upvote a suggestion you support
+        ⛔ - Downvote a suggestion you disagree with
+
+        You can only vote one way per suggestion.
+        Changing your vote automatically removes the previous one.
+
+        ## How Suggestions Are Resolved
+
+        - Each suggestion is open for **%suggestions.initialDays% days**.
+        - A minimum of **%suggestions.minimumVotes% votes** is required.
+        - If there aren't enough votes, the suggestion is extended by **%suggestions.extensionDays% days**.
+        - After the extension, suggestions with insufficient votes are **denied**.
+        - If enough votes are cast, the majority decides: more ✅ = approved, more ⛔ = denied.
+
+        ## Rules
+
+        - You can have a maximum of **%suggestions.maxActivePerUser% active suggestions** at a time.
+        - Admins can approve or reject any suggestion at any time.
+        - You may resubmit a denied suggestion, but **do not spam**.
+        - Use the thread under each suggestion for discussion.
+      footer: "%branding.name%"
 
 - name: suggestion-approve
   permissions:
   - administrator
-  description: Approve an active suggestion
-  arguments:
-  - name: suggestion_id
-    description: Suggestion ID, for example S-0001
-    required: true
-  - name: reason
-    description: Optional reason for approving the suggestion
-    required: false
-  action: SuggestionApprove
+  description: Manually reject a suggestion from the discussion thread
+  action: suggestions.Approve
 
 - name: suggestion-reject
   permissions:
   - administrator
-  description: Reject an active suggestion
-  arguments:
-  - name: suggestion_id
-    description: Suggestion ID, for example S-0001
-    required: true
-  - name: reason
-    description: Optional reason for rejecting the suggestion
-    required: false
-  action: SuggestionReject
+  description: Manually reject a suggestion from the discussion thread
+  action: suggestions.Reject
 
 - name: suggestion-repurpose
   permissions:
   - administrator
-  description: Return a resolved suggestion to active voting
-  arguments:
-  - name: suggestion_id
-    description: Suggestion ID, for example S-0001
-    required: true
-  action: SuggestionRepurpose
+  description: Reopen a resolved suggestion from the discussion thread
+  action: suggestions.Reopen

@@ -33,6 +33,5 @@ channels:
 suggestions:
   initialDays: 7
   minimumVotes: 7
-  firstExtensionDays: 3
-  finalExtensionDays: 1
+  extensionDays: 3
   maxActivePerUser: 2

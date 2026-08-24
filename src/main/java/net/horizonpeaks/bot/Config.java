@@ -1,4 +1,4 @@
-package net.horizonpeaks.bot.data;
+package net.horizonpeaks.bot;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -126,8 +126,7 @@ public record Config(
     public record Suggestions(
             int initialDays,
             int minimumVotes,
-            int firstExtensionDays,
-            int finalExtensionDays,
+            int extensionDays,
             int maxActivePerUser) {
     }
 

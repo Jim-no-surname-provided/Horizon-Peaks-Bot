@@ -1,6 +1,6 @@
 # Horizon Peaks Discord Bot
 
-Minimal Java + Maven + JDA starter for the Horizon Peaks Discord bot.
+Minimal Java + Maven + JDA starter for the Horizon Peaks Discord bot. Upon the first run it will create a couple of configuration files. In ```commands.yaml``` you can define custom commands using yaml. You can define the name, what it returns, being a string or an embed, with some placeholders to your disposal. More on []().  ```.env``` and ```config.yaml```
 
 ## Requirements
 
@@ -41,7 +41,7 @@ Because real environment variables take priority, the same JAR can be used local
 ## Build
 
 ```bash
-mvn package
+mvn clean package
 ```
 
 This creates:
