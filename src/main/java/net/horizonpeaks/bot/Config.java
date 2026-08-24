@@ -22,6 +22,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
  */
 public record Config(
         Branding branding,
+        Roles roles,
         Servers servers,
         Links links,
         Colors colors,
@@ -41,6 +42,15 @@ public record Config(
     public record Branding(
             String name,
             String banner) {
+    }
+
+    /**
+     * Represents guild roles
+     * 
+     * 
+     * @param member the role id for a member
+     */
+    public record Roles(String member) {
     }
 
     /**

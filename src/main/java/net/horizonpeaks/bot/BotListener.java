@@ -6,8 +6,8 @@ import net.horizonpeaks.bot.actions.Welcome;
 import net.horizonpeaks.bot.actions.suggestions.Submission;
 import net.horizonpeaks.bot.actions.suggestions.Voting;
 import net.horizonpeaks.bot.data.CommandDefinition;
-import net.horizonpeaks.bot.data.FileLoader;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -96,5 +96,17 @@ public final class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         Welcome.welcome(event);
+        assignMemberRole(event);
+    }
+
+    private void assignMemberRole(GuildMemberJoinEvent event) {
+        Member member = event.getMember();
+        Role memberRole = event.getGuild().getRoleById(Config.get().roles().member());
+
+        if (memberRole == null) {
+            throw new IllegalStateException("Configured member role does not exist");
+        }
+
+        event.getGuild().addRoleToMember(member, memberRole).queue();
     }
 }

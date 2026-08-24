@@ -18,13 +18,16 @@ public final class FileLoader {
      * Returns the requested runtime file, creating it from a bundled
      * resource if it does not already exist.
      *
-     * <p>If the target file is inside a directory that does not yet exist,
-     * the required parent directories are created automatically.</p>
+     * <p>
+     * If the target file is inside a directory that does not yet exist,
+     * the required parent directories are created automatically.
+     * </p>
      *
-     * @param fileName the path of the runtime file
+     * @param fileName        the path of the runtime file
      * @param defaultResource the bundled resource used as the initial file contents
      * @return the path to the existing or newly created runtime file
-     * @throws IOException if the bundled resource is missing or the file cannot be created
+     * @throws IOException if the bundled resource is missing or the file cannot be
+     *                     created
      */
     public static Path getOrCreate(String fileName, String defaultResource) throws IOException {
         Path file = Path.of(fileName);
@@ -57,7 +60,7 @@ public final class FileLoader {
      * Reads the requested runtime file as a string, creating it from a
      * bundled resource first if it does not already exist.
      *
-     * @param fileName the path of the runtime file
+     * @param fileName        the path of the runtime file
      * @param defaultResource the bundled resource used as the initial file contents
      * @return the contents of the runtime file
      * @throws IOException if the file cannot be created or read

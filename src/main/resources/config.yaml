@@ -2,6 +2,9 @@ branding:
   name: "Horizon Peaks"
   banner: "banner.webp"
 
+roles:
+  member: "1539673656760737843"
+
 servers:
   network: "play.horizon-peaks.net"
   smp: "smp.horizon-peaks.net"

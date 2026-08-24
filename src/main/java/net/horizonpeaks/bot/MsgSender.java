@@ -137,8 +137,6 @@ public final class MsgSender {
      * @return the resolved text, or {@code null} if the input was {@code null}
      */
     private static String resolve(String value, SlashCommandInteractionEvent event) {
-        Config config = Config.get();
-
         if (value == null) {
             return null;
         }

@@ -32,7 +32,7 @@ public final class Main {
                 FileLoader.readOrCreate("commands.yaml", "commands.yaml"));
 
         // Load welcome.md
-        FileLoader.readOrCreate("messages/welcome.md", "messages/welcome.md");
+        FileLoader.readOrCreate("messages/welcome.yaml", "messages/welcome.yaml");
 
         // Build bot
         JDA jda;
