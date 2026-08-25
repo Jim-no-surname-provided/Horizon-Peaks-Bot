@@ -82,7 +82,7 @@
     description: |-
       Visit our website!
 
-      %links.website%
+      **%links.website%**
     color: '%colors.brand%'
 
 - name: map

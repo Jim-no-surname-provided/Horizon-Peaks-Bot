@@ -1,6 +1,8 @@
 package net.horizonpeaks.bot;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -16,6 +18,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 /**
  * Renders configured command responses into Discord messages.
@@ -46,15 +49,21 @@ public final class MsgSender {
             reply = reply.setContent(text);
         }
 
+        List<FileUpload> files = new ArrayList<>();
+
         // Add embeds
         if (command.embeds() != null) {
             List<MessageEmbed> embeds = new ArrayList<>();
 
             for (Embed embed : command.embeds()) {
-                embeds.add(renderEmbed(embed, value -> resolve(value, event)));
+                embeds.add(renderEmbed(embed, value -> resolve(value, event), files));
             }
 
             reply = reply.addEmbeds(embeds);
+        }
+
+        if (!files.isEmpty()) {
+            reply = reply.addFiles(files);
         }
 
         // Send
@@ -68,7 +77,7 @@ public final class MsgSender {
      * @param event the current slash command interaction
      * @return the rendered JDA embed
      */
-    public static MessageEmbed renderEmbed(Embed embed, Function<String, String> resolver) {
+    public static MessageEmbed renderEmbed(Embed embed, Function<String, String> resolver, List<FileUpload> files) {
         // Replace placeholders with their values
         Embed resolved = embed.resolved(resolver);
 
@@ -77,8 +86,9 @@ public final class MsgSender {
                 .setDescription(resolved.description())
                 .setColor(parseColor(resolved.color()))
                 .setThumbnail(resolved.thumbnail())
-                .setImage(resolved.image())
                 .setFooter(resolved.footer());
+
+        addImage(builder, resolved.image(), files);
 
         if (resolved.fields() != null) {
             for (EmbedField field : resolved.fields()) {
@@ -87,6 +97,33 @@ public final class MsgSender {
         }
 
         return builder.build();
+    }
+
+    private static void addImage(EmbedBuilder builder, String image, List<FileUpload> files) {
+        if (image == null) {
+            return;
+        }
+
+        // Remote images can be used directly
+        if (image.startsWith("http://") || image.startsWith("https://")) {
+            builder.setImage(image);
+            return;
+        }
+
+        // Local images are uploaded and referenced as attachments
+        try (InputStream input = MsgSender.class.getClassLoader().getResourceAsStream(image)) {
+            if (input == null) {
+                throw new IllegalStateException("Embed image does not exist: " + image);
+            }
+
+            String fileName = image.substring(image.lastIndexOf('/') + 1);
+
+            files.add(FileUpload.fromData(input.readAllBytes(), fileName));
+            builder.setImage("attachment://" + fileName);
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read embed image: " + image, e);
+        }
     }
 
     public static String resolveConfig(String value) {

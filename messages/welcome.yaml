@@ -1,0 +1,15 @@
+title: "Welcome to %branding.name%! 🏔️"
+description: |
+  Welcome aboard, %member.mention%! 🎉
+
+  We're thrilled to have you join our %branding.name% community!
+
+  **Getting Started:**
+  Head over to <#%channels.communityInfo%> and review our network information.
+
+  Looking forward to seeing you in-game! 🚀
+
+  -# *💡 Tip: Use the !help command for a list of available commands.*
+thumbnail: "%member.avatar%"
+color: "%colors.brand%"
+footer: "Member #%guild.memberCount%"

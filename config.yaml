@@ -1,0 +1,40 @@
+branding:
+  name: "Horizon Peaks"
+  banner: "banner.webp"
+
+roles:
+  member: "1539673656760737843"
+
+servers:
+  network: "play.horizon-peaks.net"
+  smp: "smp.horizon-peaks.net"
+  creative: "cmp.horizon-peaks.net"
+
+links:
+  website: "https://horizon-peaks.net"
+  map: "https://map.horizon-peaks.net"
+  vote: "https://horizon-peaks.net/vote"
+
+colors:
+  brand: "#11806A"
+  success: "#57F287"
+  error: "#ED4245"
+  vip: "#F1C40F"
+  booster: "#CC377E"
+
+images:
+  vip: ""
+  booster: ""
+
+channels:
+  welcome: "1479251824291610624"
+  communityInfo: "1479251603763761256"
+  activeSuggestions: "1479251853219860602"
+  approvedSuggestions: "1479251856181170307"
+  deniedSuggestions: "1479251859007869121"
+
+suggestions:
+  initialDays: 7
+  minimumVotes: 7
+  extensionDays: 3
+  maxActivePerUser: 2

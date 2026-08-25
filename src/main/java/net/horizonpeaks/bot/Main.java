@@ -7,6 +7,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.horizonpeaks.bot.data.CommandDefinition;
 import net.horizonpeaks.bot.data.Environment;
 import net.horizonpeaks.bot.data.FileLoader;
@@ -38,6 +41,9 @@ public final class Main {
         JDA jda;
         try {
             jda = JDABuilder.createDefault(token)
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .setChunkingFilter(ChunkingFilter.ALL)
                     .addEventListeners(new BotListener(commands, config))
                     .build()
                     .awaitReady();

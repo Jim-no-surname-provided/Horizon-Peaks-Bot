@@ -1,6 +1,7 @@
 package net.horizonpeaks.bot.actions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -23,15 +24,14 @@ public class Welcome {
         try {
 
             welcome = yamlMapper.readValue(
-                    FileLoader.getOrCreate("messages/welcome.yaml", "messages/welcome.yaml").toFile(),
-                    Embed.class);
+                    FileLoader.getOrCreate("messages/welcome.yaml", "messages/welcome.yaml").toFile(), Embed.class);
 
         } catch (IOException e) {
             System.err.println("File messages/welcome.yaml doesn't exist.");
             return;
         }
 
-        MessageEmbed embed = MsgSender.renderEmbed(welcome, value -> resolve(value, event));
+        MessageEmbed embed = MsgSender.renderEmbed(welcome, value -> resolve(value, event), new ArrayList<>());
 
         TextChannel channel = event.getGuild().getTextChannelById(Config.get().channels().welcome());
 

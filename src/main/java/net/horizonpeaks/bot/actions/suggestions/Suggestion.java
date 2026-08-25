@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,19 +129,19 @@ public class Suggestion {
     /**
      * Creates a complete suggestion representation
      *
-     * @param jda the running Discord connection
-     * @param id the numeric suggestion ID
-     * @param title the suggestion title
+     * @param jda         the running Discord connection
+     * @param id          the numeric suggestion ID
+     * @param title       the suggestion title
      * @param description the suggestion description
-     * @param image the optional image URL
-     * @param examples the optional examples
-     * @param author the member who submitted the suggestion
-     * @param reason the optional reason for the current status
-     * @param status the current suggestion status
+     * @param image       the optional image URL
+     * @param examples    the optional examples
+     * @param author      the member who submitted the suggestion
+     * @param reason      the optional reason for the current status
+     * @param status      the current suggestion status
      * @param submittedAt the time the current voting period began
-     * @param closedAt the time the suggestion was closed, or {@code null}
-     * @param upvotes the number of community upvotes
-     * @param downvotes the number of community downvotes
+     * @param closedAt    the time the suggestion was closed, or {@code null}
+     * @param upvotes     the number of community upvotes
+     * @param downvotes   the number of community downvotes
      */
     public Suggestion(JDA jda, int id, String title, String description, @Nullable String image,
             @Nullable String examples, Member author, @Nullable String reason, Status status,
@@ -164,15 +165,15 @@ public class Suggestion {
     /**
      * Creates a newly opened suggestion without closing data or stored votes
      *
-     * @param jda the running Discord connection
-     * @param id the numeric suggestion ID
-     * @param title the suggestion title
+     * @param jda         the running Discord connection
+     * @param id          the numeric suggestion ID
+     * @param title       the suggestion title
      * @param description the suggestion description
-     * @param image the optional image URL
-     * @param examples the optional examples
-     * @param author the member who submitted the suggestion
-     * @param reason the optional reason for the current status
-     * @param status the current suggestion status
+     * @param image       the optional image URL
+     * @param examples    the optional examples
+     * @param author      the member who submitted the suggestion
+     * @param reason      the optional reason for the current status
+     * @param status      the current suggestion status
      * @param submittedAt the time the suggestion was submitted
      */
     public Suggestion(JDA jda, int id, String title, String description, @Nullable String image,
@@ -205,7 +206,7 @@ public class Suggestion {
         if (status == Status.OPEN) {
             builder.setFooter("S-%04d | Expires %s | %s".formatted(
                     id,
-                    "<t:%d:F>".formatted(expiresAt.toEpochSecond()),
+                    expiresAt.format(DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm")),
                     config.branding().name()));
 
         } else {
@@ -215,7 +216,7 @@ public class Suggestion {
 
             builder.setFooter("S-%04d | %s".formatted(id, config.branding().name()))
                     .addField("Votes", "%s %d | %s %d"
-                            .formatted(Status.ACCEPTED.emoji, upvotes, Status.REJECTED.emoji, downvotes), true)
+                            .formatted(Status.ACCEPTED.emoji, upvotes, Status.REJECTED.emoji, downvotes), false)
                     .addField("Submitted", "<t:%d:F>".formatted(submittedAt.toEpochSecond()), true)
                     .addField("Closed", "<t:%d:F>".formatted(closedAt.toEpochSecond()), true);
 
@@ -244,7 +245,8 @@ public class Suggestion {
      *
      * @param message the Discord message representing the suggestion
      * @return the reconstructed suggestion
-     * @throws IllegalArgumentException if the message cannot be interpreted as a suggestion
+     * @throws IllegalArgumentException if the message cannot be interpreted as a
+     *                                  suggestion
      */
     public static Suggestion fromMessage(Message message) {
         if (message.getEmbeds().isEmpty()) {
@@ -297,9 +299,11 @@ public class Suggestion {
             throw new IllegalArgumentException("Suggestion has no valid author");
         }
         String authorId = authorMatcher.group(1);
-        Member author = message.getGuild()
-                .retrieveMemberById(authorId)
-                .complete();
+        Member author = message.getGuild().getMemberById(authorId);
+
+        if (author == null) {
+            throw new IllegalArgumentException("Suggestion author is not in the guild");
+        }
 
         // Read optional values
         String image = embed.getImage() == null ? null : embed.getImage().getUrl();
@@ -353,7 +357,7 @@ public class Suggestion {
      * Returns a required field from a suggestion embed
      *
      * @param embed the suggestion embed
-     * @param name the field name
+     * @param name  the field name
      * @return the field value
      * @throws IllegalArgumentException if the field does not exist
      */
@@ -372,7 +376,7 @@ public class Suggestion {
      * Returns an optional field from a suggestion embed
      *
      * @param embed the suggestion embed
-     * @param name the field name
+     * @param name  the field name
      * @return the field value, or {@code null} if it does not exist
      */
     private static @Nullable String getOptionalField(MessageEmbed embed, String name) {
@@ -446,8 +450,8 @@ public class Suggestion {
      * previous suggestion message is removed after the new message was sent
      * </p>
      *
-     * @param reason the optional reason for the status change
-     * @param status the new suggestion status
+     * @param reason  the optional reason for the status change
+     * @param status  the new suggestion status
      * @param message the current Discord message representing the suggestion
      */
     public void changeStatus(@Nullable String reason, Status status, Message message) {
