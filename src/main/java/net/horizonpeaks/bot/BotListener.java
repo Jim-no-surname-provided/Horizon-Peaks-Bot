@@ -3,10 +3,10 @@ package net.horizonpeaks.bot;
 import java.util.List;
 
 import net.horizonpeaks.bot.actions.Welcome;
-import net.horizonpeaks.bot.actions.suggestions.Modal;
 import net.horizonpeaks.bot.actions.suggestions.Submission;
 import net.horizonpeaks.bot.actions.suggestions.Voting;
 import net.horizonpeaks.bot.data.CommandDefinition;
+import net.horizonpeaks.bot.data.ModalDefinition;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -32,8 +32,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  */
 public final class BotListener extends ListenerAdapter {
 
-    private final List<CommandDefinition> commands;
     private final Config config;
+    private final List<CommandDefinition> commands;
+    private final List<ModalDefinition> modals;
 
     /**
      * Creates a listener using the configured slash commands and bot
@@ -42,9 +43,10 @@ public final class BotListener extends ListenerAdapter {
      * @param commands command definitions loaded from {@code commands.yaml}
      * @param config   general bot configuration
      */
-    public BotListener(List<CommandDefinition> commands, Config config) {
-        this.commands = commands;
+    public BotListener(Config config, List<CommandDefinition> commands, List<ModalDefinition> modals) {
         this.config = config;
+        this.commands = commands;
+        this.modals = modals;
     }
 
     /**
@@ -66,6 +68,11 @@ public final class BotListener extends ListenerAdapter {
 
             if (command.action() != null) {
                 command.action().act(command, event);
+                return;
+            }
+
+            if (command.modalId() != null) {
+                event.replyModal(getModalDef(command.modalId()).toModal()).queue();
                 return;
             }
 
@@ -162,10 +169,38 @@ public final class BotListener extends ListenerAdapter {
      */
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        if (event.getComponentId().equals("suggestion:create")) {
-            net.dv8tion.jda.api.modals.Modal modal = Modal.buildModal();
-            event.replyModal(modal).queue();
-            return;
+        String id = event.getComponentId();
+
+        if (id.startsWith("modal:")) {
+            event.replyModal(getModalDef(id).toModal()).queue();
         }
+
+        if (id.startsWith("application:accept:")) {
+            // Handle application acceptance
+        }
+
+        if (id.startsWith("application:deny:")) {
+            // Handle application denial
+        }
+
+        if (id.startsWith("application:interview:")) {
+            // Handle application interview
+        }
+    }
+
+    /**
+     * Finds a configured modal by its interaction ID.
+     *
+     * @param id the modal interaction ID
+     * @return the matching modal definition, or {@code null} if none exists
+     */
+    private ModalDefinition getModalDef(String id) {
+        // Find and open the requested modal
+        for (ModalDefinition modal : modals) {
+            if (modal.id().equals(id)) {
+                return modal;
+            }
+        }
+        return null;
     }
 }

@@ -81,8 +81,8 @@ public final class Submission {
         // Send suggestion and initialize voting and discussion
         Status.OPEN.channel(event.getJDA())
                 .sendMessageEmbeds(suggestion.toMessageEmbed())
-                // Add button
-                .addComponents(ActionRow.of(Button.primary("suggestion:create", "Make a suggestion")))
+                // Add button that calls a modal
+                .addComponents(ActionRow.of(Button.primary("modal:suggestion:create", "Make a suggestion")))
                 // Send
                 .queue(message -> {
                     suggestion.addVoting(message);

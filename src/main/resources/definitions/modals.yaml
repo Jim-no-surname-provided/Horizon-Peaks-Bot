@@ -1,0 +1,65 @@
+# Defines reusable Discord modals.
+#
+# Each top-level entry is a named modal definition. The `id` is the Discord
+# interaction ID used both to open the modal and to identify its submission.
+#
+# Buttons open a configured modal by using the same component ID as the modal.
+# Modal IDs use the `modal:` prefix so the button listener can recognize that
+# the interaction should open a modal.
+#
+# Example:
+#
+#   modal ID:  modal:suggestion:create
+#   button ID: modal:suggestion:create
+#
+# The button listener looks for the `modal:` prefix, finds the modal with the
+# matching ID, builds it, and opens it.
+#
+# Fields are rendered as Discord text inputs. Supported styles are SHORT and
+# PARAGRAPH. Optional properties such as placeholder, maxLength, and required
+# may be omitted to use JDA's defaults.
+#
+# Config placeholders such as %suggestions.initialDays% may be used in modal
+# text and other supported strings and are resolved when the modal is built.
+
+suggestion:
+  id: "modal:suggestion:create"
+  title: "Submit a Suggestion"
+  text: |
+    **Before submitting, please note:**
+
+    • Suggestions initially stay open for **%suggestions.initialDays% days**
+    • If there are not enough votes, they may be extended by **%suggestions.extensionDays% days**
+    • At least **%suggestions.minimumVotes% total votes** are required
+    • You may have at most **%suggestions.maxActivePerUser% active suggestions**
+    • Administrators may approve or reject suggestions at any time
+    • Denied suggestions may be submitted again, but please do not spam them
+
+  fields:
+    - id: "title"
+      label: "Title"
+      style: short
+      placeholder: "A short title for your suggestion"
+      maxLength: 100
+      required: true
+
+    - id: "description"
+      label: "Description"
+      style: paragraph
+      placeholder: "Describe your suggestion in detail"
+      maxLength: 1024
+      required: true
+
+    - id: "image"
+      label: "Image URL (optional)"
+      style: short
+      placeholder: "https://example.com/image.png"
+      maxLength: 256
+      required: false
+
+    - id: "examples"
+      label: "Examples (optional)"
+      style: paragraph
+      placeholder: "Text examples or links to illustrate your idea"
+      maxLength: 1024
+      required: false

@@ -13,7 +13,7 @@ public class Info implements Action {
     public void act(CommandDefinition command, SlashCommandInteractionEvent event) {
         MsgSender.render(command, event,
                 reply -> reply.addComponents(
-                        ActionRow.of(Button.primary("suggestion:create", "Make a suggestion"))));
+                        ActionRow.of(Button.primary("modal:suggestion:create", "Make a suggestion"))));
     }
 
 }

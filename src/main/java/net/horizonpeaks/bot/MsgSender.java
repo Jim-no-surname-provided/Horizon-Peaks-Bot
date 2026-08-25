@@ -10,7 +10,7 @@ import java.util.function.UnaryOperator;
 
 import net.horizonpeaks.bot.data.CommandDefinition;
 import net.horizonpeaks.bot.data.Embed;
-import net.horizonpeaks.bot.data.EmbedField;
+import net.horizonpeaks.bot.data.Embed.EmbedField;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;

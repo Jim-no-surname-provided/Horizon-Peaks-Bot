@@ -1,5 +1,90 @@
 # Horizon Peaks slash commands
 #
+# COMMAND DEFINITIONS
+#
+# Each top-level list entry defines one Discord slash command.
+#
+# Required properties:
+#
+#   name
+#     The slash command name.
+#
+#   description
+#     The description shown by Discord when selecting the command.
+#
+# Optional properties:
+#
+#   permissions
+#     Restricts who Discord allows to use the command.
+#     If omitted, everyone can use the command.
+#
+#     Example:
+#
+#       permissions:
+#         - administrator
+#
+#   arguments
+#     Defines slash command arguments.
+#
+#     Each argument supports:
+#       name
+#       description
+#       required
+#
+#     Command arguments are also available as placeholders using their name.
+#
+#     Example:
+#
+#       arguments:
+#         - name: name
+#           description: Name of the announcement to post
+#           required: true
+#
+#   embeds
+#     One or more Discord embeds rendered when the command is called.
+#
+#     Embeds may contain:
+#       title
+#       url
+#       description
+#       color
+#       thumbnail
+#       image
+#       footer
+#       fields
+#
+#     Fields contain:
+#       name
+#       value
+#       inline
+#
+#   action
+#     Runs custom Java behavior for commands that cannot be represented
+#     entirely through YAML.
+#
+#     Action names are relative to the bot's actions package.
+#
+#     Examples:
+#
+#       action: Ping
+#       action: suggestions.Approve
+#
+#     A command may contain both declarative content and an action when the
+#     action needs to extend or modify that content.
+#
+#   modalId
+#     Opens a modal defined in definitions/modals.yaml.
+#
+#     The value must match the modal's configured ID.
+#
+#     Example:
+#
+#       modalId: modal:suggestion:create
+#
+#     Use this when the command only needs to open a configured form instead
+#     of implementing that behavior in a Java action.
+#
+#
 # PLACEHOLDERS
 #
 # Event:
@@ -40,8 +125,7 @@
 #   %suggestions.extensionDays%
 #   %suggestions.maxActivePerUser%
 #
-# Command arguments are available as placeholders using their argument name
-# Missing permissions means everyone can use the command
+# Command arguments are available as placeholders using their argument name.
 
 - name: info
   permissions:
@@ -282,7 +366,7 @@
 
 - name: suggestion
   description: Submit a community suggestion
-  action: suggestions.Modal
+  modalId: modal:suggestion:create
 
 - name: suggestion-info
   permissions:
@@ -323,6 +407,7 @@
         - You may resubmit a denied suggestion, but **do not spam**.
         - Use the thread under each suggestion for discussion.
       footer: "%branding.name%"
+  action: suggestions.Info
 
 - name: suggestion-approve
   permissions:

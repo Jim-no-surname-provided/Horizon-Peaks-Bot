@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.horizonpeaks.bot.data.CommandDefinition;
 import net.horizonpeaks.bot.data.Environment;
 import net.horizonpeaks.bot.data.FileLoader;
+import net.horizonpeaks.bot.data.ModalDefinition;
 
 public final class Main {
     private Main() {
@@ -28,25 +29,30 @@ public final class Main {
         String guildId = environment.discordGuildId();
 
         // Load config
-        Config config = Config.fromYaml(FileLoader.readOrCreate("config.yaml", "config.yaml"));
+        Config config = Config.fromYaml(FileLoader.readOrCreate("definitions/config.yaml", "definitions/config.yaml"));
 
         // Load commands
         List<CommandDefinition> commands = CommandDefinition.fromYaml(
-                FileLoader.readOrCreate("commands.yaml", "commands.yaml"));
+                FileLoader.readOrCreate("definitions/commands.yaml", "definitions/commands.yaml"));
+
+        // Load commands
+        List<ModalDefinition> modals = ModalDefinition.fromYaml(
+                FileLoader.readOrCreate("definitions/modals.yaml", "definitions/modals.yaml"));
 
         // Load welcome.md
-        FileLoader.readOrCreate("messages/welcome.yaml", "messages/welcome.yaml");
+        FileLoader.readOrCreate("definitions/welcome.yaml", "definitions/welcome.yaml");
 
         // Build bot
         JDA jda;
         try {
             jda = JDABuilder.createDefault(token)
-                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .setChunkingFilter(ChunkingFilter.ALL)
-                    .addEventListeners(new BotListener(commands, config))
+                    .addEventListeners(new BotListener(config, commands, modals))
                     .build()
                     .awaitReady();
+
         } catch (InvalidTokenException | IllegalArgumentException e) {
             System.err.println("""
                     The bot has not been configured correctly.

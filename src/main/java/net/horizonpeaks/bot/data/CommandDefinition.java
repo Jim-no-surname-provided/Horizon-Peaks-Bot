@@ -37,7 +37,9 @@ public record CommandDefinition(
         List<Embed> embeds,
         List<String> permissions,
         List<ArgumentDefinition> arguments,
-        Action action) {
+        Action action,
+        String modalId  
+    ) {
 
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
 
