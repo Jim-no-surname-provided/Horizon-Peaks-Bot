@@ -7,21 +7,21 @@ import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.horizonpeaks.bot.Config;
 import net.horizonpeaks.bot.actions.Action;
+import net.horizonpeaks.bot.data.CommandDefinition;
 
 /**
  * Starts the community suggestion submission process.
  */
 public final class Modal implements Action {
 
-    private final Config config = Config.get();
-
     /**
      * Opens the suggestion submission form.
      *
+     * @param command the command calling this action
      * @param event the slash command interaction
      */
     @Override
-    public void act(SlashCommandInteractionEvent event) {
+    public void act(CommandDefinition command, SlashCommandInteractionEvent event) {
         net.dv8tion.jda.api.modals.Modal modal = buildModal();
         event.replyModal(modal).queue();
     }
@@ -31,7 +31,7 @@ public final class Modal implements Action {
      *
      * @return the suggestion modal
      */
-    private net.dv8tion.jda.api.modals.Modal buildModal() {
+    public static net.dv8tion.jda.api.modals.Modal buildModal() {
         // Add submission information above the form
         TextDisplay disclaimer = TextDisplay.of(buildDisclaimer());
 
@@ -74,8 +74,8 @@ public final class Modal implements Action {
      *
      * @return the formatted suggestion disclaimer
      */
-    private String buildDisclaimer() {
-        Config.Suggestions suggestions = config.suggestions();
+    private static String buildDisclaimer() {
+        Config.Suggestions suggestions = Config.get().suggestions();
 
         return """
                 **Before submitting, please note:**

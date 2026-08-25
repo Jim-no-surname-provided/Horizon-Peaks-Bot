@@ -172,121 +172,44 @@
   - administrator
   description: Post the Horizon Peaks server rules
   embeds:
+
   - color: '%colors.brand%'
     image: '%branding.banner%'
+
   - title: General Statement
-    description: "These rules apply to all official HorizonPeaksSMP Minecraft servers, Discord servers, communication platforms,\
-      \ websites, forums, and social media. Staff reserve the right to punish violations across any HorizonPeaksSMP properties.\
-      \ \n\nStaff can change, add, or remove rules as deemed necessary.\n\nIf you leave during an active punishment (e.g.,\
-      \ temp-ban, mute), you will receive a ban. The server has a 16+ age restriction, but exceptionally talented 15-year-olds\
-      \ may be considered. Anyone found under 13 will be permanently banned without appeal, as this violates Discord's terms\
-      \ of service.\n\n**Warning Structure**\n- First 3 violations: 3-day mute\n- Next violation: 1-week mute\n- Next violation:\
-      \ Temporary server ban and Discord mute\n\nAll staff members are authorized to punish, ban, mute, kick, or warn players\
-      \ if there is clear and undeniable evidence that a rule was violated on the server. This evidence will be presented\
-      \ to the player receiving the punishment."
+    description: "```ansi\n\u001b[37mThese rules apply to all official \u001b[36mHorizonPeaksSMP\u001b[37m Minecraft servers, Discord servers, communication platforms, websites, forums, and social media. Staff reserve the right to punish violations across any \u001b[36mHorizonPeaksSMP\u001b[37m properties.\n\nStaff can change, add, or remove rules as deemed necessary.\n\nIf you leave during an active punishment (e.g., temp-ban, mute), you will receive a ban. The server has a 16+ age restriction, but exceptionally talented 15-year-olds may be considered. Anyone found under 13 will be permanently banned without appeal, as this violates Discord's terms of service.\n\n\u001b[1;34mWarning Structure\u001b[22;37m\n- First 3 violations: 3-day mute\n- Next violation: 1-week mute\n- Next violation: Temporary server ban and Discord mute\n\n\u001b[35mAll staff members are authorized to punish, ban, mute, kick, or warn players if there is clear and undeniable evidence that a rule was violated on the server. This evidence will be presented to the player receiving the punishment.\u001b[0m\n```"
     color: '%colors.brand%'
+
   - title: Chat | Rule 1
-    description: |-
-      **[1.1] No Tolerance for Hate Speech**
-      We do not tolerate hate speech of any kind on our server.
-
-      **[1.2] Be Mindful of Others**
-      What might seem like harmless banter to you could be hurtful to others. Use common sense, and avoid intentionally triggering, annoying, or upsetting anyone. Think before you speak.
-
-      **[1.3] Respect Cultural Diversity**
-      Our community is diverse, with members from around the world. To maintain harmony, please avoid discussing sensitive topics like politics or religion.
-
-      **[1.4] Keep Content SFW**
-      Please refrain from sharing explicit content, including porn, gore, or excessively edgy memes and videos. While we enjoy joking around, don't cross the line.
-
-      **[1.5] No Spamming**
-      Do not flood the chat with repeated or similar messages. Keep the conversation clear and enjoyable for everyone.
+    description: "```ansi\n\u001b[37m[\u001b[33m1.1\u001b[37m] No Tolerance for Hate Speech\nWe do not tolerate hate speech of any kind on our server.\n\n[\u001b[33m1.2\u001b[37m] Be Mindful of Others\nWhat might seem like harmless banter to you could be hurtful to others. Use common sense, and avoid intentionally triggering, annoying, or upsetting anyone. Think before you speak.\n\n[\u001b[33m1.3\u001b[37m] Respect Cultural Diversity\nOur community is diverse, with members from around the world. To maintain harmony, please avoid discussing sensitive topics like politics or religion.\n\n[\u001b[33m1.4\u001b[37m] Keep Content SFW\nPlease refrain from sharing explicit content, including porn, gore, or excessively edgy memes and videos. While we enjoy joking around, don't cross the line.\n\n[\u001b[33m1.5\u001b[37m] No Spamming\nDo not flood the chat with repeated or similar messages. Keep the conversation clear and enjoyable for everyone.\u001b[0m\n```"
     color: '%colors.brand%'
+
   - title: Griefing/Stealing | Rule 2
-    description: |-
-      **[2.1] Respect Claims and Boundaries**
-      Do not build within someone else's claim without permission. The default claim size is 100 blocks, and claims become invalid after 30 days of inactivity unless there's a valid reason. To claim an area, mark it with your IGN and clearly define the boundaries using signs, borders, or corner markers.
-
-      **[2.2] Protect Your Claim's Surroundings**
-      All claims must include a defined protection area around them. If no specific area is defined, it will default to (perimeter of your claim ÷ 5). Building within this zone without the claim holder's permission is prohibited and will result in warnings or further action by staff.
-
-      **[2.3] No Griefing**
-      Do not mine blocks, ignite TNT, kill mobs, place blocks, or cause any destruction in community or player builds without permission. This is considered griefing.
-
-      If you accidentally damage someone's build, contact the player or staff immediately.
-
-      **[2.4] No Stealing**
-      Stealing is not allowed, including looting chests and taking placed blocks.
-      Chest interactions are monitored, so any theft will be detected.
-
-      **[2.5] No Non-Consensual Player Killing/Trapping**
-      Do not kill or trap other players without their consent. Any action leading to another player's death is considered PvP and requires prior agreement.
+    description: "```ansi\n\u001b[37m[\u001b[33m2.1\u001b[37m] Respect Claims and Boundaries\nDo not build within someone else's claim without permission. The default claim size is 100 blocks, and claims become invalid after 30 days of inactivity unless there's a valid reason. To claim an area, mark it with your IGN and clearly define the boundaries using signs, borders, or corner markers.\n\n[\u001b[33m2.2\u001b[37m] Protect Your Claim's Surroundings\nAll claims must include a defined protection area around them. If no specific area is defined, it will default to (perimeter of your claim ÷ 5). Building within this zone without the claim holder's permission is prohibited and will result in warnings or further action by staff.\n\n[\u001b[33m2.3\u001b[37m] No Griefing\nDo not mine blocks, ignite TNT, kill mobs, place blocks, or cause any destruction in community or player builds without permission. This is considered griefing.\n\n\u001b[32mIf you accidentally damage someone's build, contact the player or staff immediately.\u001b[37m\n\n[\u001b[33m2.4\u001b[37m] No Stealing\nStealing is not allowed, including looting chests and taking placed blocks.\nChest interactions are monitored, so any theft will be detected.\n\n[\u001b[33m2.5\u001b[37m] No Non-Consensual Player Killing/Trapping\nDo not kill or trap other players without their consent. Any action leading to another player's death is considered PvP and requires prior agreement.\u001b[0m\n```"
     color: '%colors.brand%'
+
   - title: Exploits | Rule 3
-    description: |-
-      **[3.1] Report Exploits Immediately**
-      Using anything that provides an unfair advantage is strictly prohibited. If you discover an exploit, report it to staff immediately by opening a report ticket.
-      This includes server software exploits, permission exploits in-game and on Discord, plugin and datapack exploits, and any exploits within Minecraft itself.
-
-      **[3.2] No Seed-Based X-Raying or Math Mining**
-      Do not use seed generation or seed exploits to find diamonds or other resources. These methods are considered unfair and are not allowed.
-
-      **[3.3] Maintain Server Performance**
-      Do not intentionally degrade server performance with machines, excessive entities, or Redstone contraptions.
-
-      If your farm or machines cause lag, staff may ask you to shut them down. If you're AFKing and causing lag, staff may also kick or temporarily ban you from the server.
-
-      **[3.4] No Item Duplication**
-      Duplicating items by any method is not allowed, except for the specific exceptions outlined below.
+    description: "```ansi\n\u001b[37m[\u001b[33m3.1\u001b[37m] Report Exploits Immediately\nUsing anything that provides an unfair advantage is strictly prohibited. If you discover an exploit, report it to staff immediately by opening a report ticket.\nThis includes server software exploits, permission exploits in-game and on Discord, plugin and datapack exploits, and any exploits within Minecraft itself.\n\n[\u001b[33m3.2\u001b[37m] No Seed-Based X-Raying or Math Mining\nDo not use seed generation or seed exploits to find diamonds or other resources. These methods are considered unfair and are not allowed.\n\n[\u001b[33m3.3\u001b[37m] Maintain Server Performance\nDo not intentionally degrade server performance with machines, excessive entities, or Redstone contraptions.\n\nIf your farm or machines cause lag, staff may ask you to shut them down. If you're AFKing and causing lag, staff may also kick or temporarily ban you from the server.\n\n[\u001b[33m3.4\u001b[37m] No Item Duplication\nDuplicating items by any method is not allowed, except for the specific exceptions outlined below.\u001b[0m\n```"
     color: '%colors.brand%'
     fields:
     - name: Allowed Exceptions
-      value: |-
-        - Bedrock Breaking
-        - End Portal / Portal Frame Removal (except for the communal portal or main island gateways, which require prior staff approval)
-        - Update Suppression Machines (Only while the server activity is low to minimize lag)
-        - TNT Duping
-        - Carpet Duping
-        - Rail Duping
-        - Sand Duping
+      value: "```ansi\n\u001b[37m- Bedrock Breaking\n- End Portal / Portal Frame Removal (\u001b[31mexcept for the communal portal or main island gateways, which require prior staff approval\u001b[37m)\n- Update Suppression Machines (\u001b[31mOnly while the server activity is low to minimize lag\u001b[37m)\n- TNT Duping\n- Carpet Duping\n- Rail Duping\n- Sand Duping\u001b[0m\n```"
       inline: false
+
   - title: Hacking/Banned Mods | Rule 4
-    description: |-
-      **[4.1] Hacked Clients**
-      Hacked clients are strictly prohibited. Third-party clients are permitted as long as their features do not provide a significant gameplay advantage. If you are unsure, please consult #support.
-
-      **[4.2] Banned Mods**
-      Mods such as X-Ray, Entity Tracking, and similar tools are not allowed. This includes Baritone and X-Ray texture packs. For a complete list of banned mods, please refer to the link below.
+    description: "```ansi\n\u001b[37m[\u001b[33m4.1\u001b[37m] Hacked Clients\nHacked clients are strictly \u001b[1;31mprohibited\u001b[22;37m. Third-party clients are permitted as long as their features do not provide a significant gameplay advantage. If you are unsure, please consult #support.\n\n[\u001b[33m4.2\u001b[37m] Banned Mods\nMods such as X-Ray, Entity Tracking, and similar tools are not allowed. This includes Baritone and X-Ray texture packs. For a complete list of banned mods, please refer to the link below.\u001b[0m\n```"
     color: '%colors.brand%'
+
   - title: Advertising | Rule 5
-    description: |-
-      **[5.1] No Sharing External Links**
-      Do not share server IPs, Discord server invites, or website/forum links to other Minecraft servers without prior staff approval. This also includes mentioning the names of other Minecraft servers.
-
-      Exceptions include widely known servers like Hypixel, Hive, CubeCraft, and similar, as well as YouTuber SMPs or SMPs that do not actively recruit or send out whitelist applications, such as Hermitcraft, SciCraft, TIS Trinity, and DreamSMP.
-
-      *Having a Discord status that intentionally advertises another server is prohibited.*
+    description: "```ansi\n\u001b[37m[\u001b[33m5.1\u001b[37m] No Sharing External Links\nDo not share server IPs, Discord server invites, or website/forum links to other Minecraft servers without prior staff approval. This also includes mentioning the names of other Minecraft servers.\n\nExceptions include widely known servers like Hypixel, Hive, CubeCraft, and similar, as well as YouTuber SMPs or SMPs that do not actively recruit or send out whitelist applications, such as Hermitcraft, SciCraft, TIS Trinity, and DreamSMP.\u001b[0m\n```\n\n*Having a Discord status that intentionally advertises another server is prohibited.*"
     color: '%colors.brand%'
+
   - title: Illegal Content/Piracy | Rule 6
-    description: |-
-      **[6.1] No Sharing or Teaching Illegal Content**
-      Do not share, mention, or demonstrate methods for illegally obtaining content. This includes sharing links, tutorials, or mentioning applications used for illegal purposes.
-
-      > This rule is in place to comply with [Discord's Terms of Service](https://discord.com/terms).
+    description: "```ansi\n\u001b[37m[\u001b[33m6.1\u001b[37m] No Sharing or Teaching Illegal Content\nDo not share, mention, or demonstrate methods for illegally obtaining content. This includes sharing links, tutorials, or mentioning applications used for illegal purposes.\u001b[0m\n```\n\n> This rule is in place to comply with [Discord's Terms of Service](https://discord.com/terms)."
     color: '%colors.brand%'
+
   - title: Voice Chat | Rule 7
-    description: |-
-      **[7.1] Respect in Voice Channels**
-      Be respectful in voice channels. All rules from Rule 1 also apply to voice chat.
-
-      **[7.2] Avoid Disruptive Microphone Settings**
-      Do not intentionally adjust your microphone settings to make your audio excessively loud or irritating.
-
-      **[7.3] No Soundboard Spamming**
-      Do not spam soundboards or play disruptive audio that disturbs other users.
-
-      **[7.4] No Abusive Behavior**
-      Do not join voice calls only to be obnoxious or disruptive, and then leave immediately.
+    description: "```ansi\n\u001b[37m[\u001b[33m7.1\u001b[37m] Respect in Voice Channels\nBe respectful in voice channels. All rules from Rule 1 also apply to voice chat.\n\n[\u001b[33m7.2\u001b[37m] Avoid Disruptive Microphone Settings\nDo not intentionally adjust your microphone settings to make your audio excessively loud or irritating.\n\n[\u001b[33m7.3\u001b[37m] No Soundboard Spamming\nDo not spam soundboards or play disruptive audio that disturbs other users.\n\n[\u001b[33m7.4\u001b[37m] No Abusive Behavior\nDo not join voice calls only to be obnoxious or disruptive, and then leave immediately.\u001b[0m\n```"
     color: '%colors.brand%'
 
 - name: vip-perks

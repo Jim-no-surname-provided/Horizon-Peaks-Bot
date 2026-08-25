@@ -11,6 +11,8 @@ import java.nio.file.Path;
  */
 public final class FileLoader {
 
+    private static final boolean DEV = Boolean.getBoolean("horizon.dev");
+
     private FileLoader() {
     }
 
@@ -32,10 +34,28 @@ public final class FileLoader {
     public static Path getOrCreate(String fileName, String defaultResource) throws IOException {
         Path file = Path.of(fileName);
 
+        // Always use an existing runtime file
         if (Files.exists(file)) {
             return file;
         }
 
+        // During development, read the bundled resource directly
+        if (DEV) {
+            try {
+                var resource = FileLoader.class.getClassLoader().getResource(defaultResource);
+
+                if (resource == null) {
+                    throw new IOException("Missing bundled resource: " + defaultResource);
+                }
+
+                return Path.of(resource.toURI());
+
+            } catch (Exception e) {
+                throw new IOException("Could not load development resource: " + defaultResource, e);
+            }
+        }
+
+        // In production, create the runtime file from the bundled default
         try (InputStream input = FileLoader.class
                 .getClassLoader()
                 .getResourceAsStream(defaultResource)) {

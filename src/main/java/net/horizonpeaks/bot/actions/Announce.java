@@ -6,6 +6,7 @@ import java.nio.file.Path;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.horizonpeaks.bot.data.CommandDefinition;
 
 /**
  * Responds with the contents of a markdown file.
@@ -15,10 +16,11 @@ public final class Announce implements Action {
     /**
      * Sends a markdown file
      *
+     * @param command the command calling this action
      * @param event the slash command interaction
      */
     @Override
-    public void act(SlashCommandInteractionEvent event) {
+    public void act(CommandDefinition command, SlashCommandInteractionEvent event) {
         // Get argument
         OptionMapping option = event.getOption("name");
         if (option == null) {

@@ -3,6 +3,7 @@ package net.horizonpeaks.bot.actions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.horizonpeaks.bot.data.CommandDefinition;
 
 /**
  * Defines a custom action that can be executed by a configured slash command.
@@ -25,7 +26,7 @@ public interface Action {
      *
      * @param event the Discord slash command interaction that triggered the action
      */
-    void act(SlashCommandInteractionEvent event);
+    void act(CommandDefinition command, SlashCommandInteractionEvent event);
 
     /**
      * Resolves an action name into an instantiated {@link Action}.

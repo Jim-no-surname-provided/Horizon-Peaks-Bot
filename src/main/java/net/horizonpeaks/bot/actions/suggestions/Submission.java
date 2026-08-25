@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.jspecify.annotations.Nullable;
 
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -77,19 +79,24 @@ public final class Submission {
         }
 
         // Send suggestion and initialize voting and discussion
-        Status.OPEN.channel(event.getJDA()).sendMessageEmbeds(suggestion.toMessageEmbed()).queue(message -> {
-            suggestion.addVoting(message);
-            suggestion.createDiscussionThread(message);
+        Status.OPEN.channel(event.getJDA())
+                .sendMessageEmbeds(suggestion.toMessageEmbed())
+                // Add button
+                .addComponents(ActionRow.of(Button.primary("suggestion:create", "Make a suggestion")))
+                // Send
+                .queue(message -> {
+                    suggestion.addVoting(message);
+                    suggestion.createDiscussionThread(message);
 
-            // Confirmation message with a link to the suggestion
-            event
-                    .getHook()
-                    .editOriginal("Suggestion submitted successfully. You can see it here: "
-                            + message.getJumpUrl())
-                    .queue();
+                    // Confirmation message with a link to the suggestion
+                    event
+                            .getHook()
+                            .editOriginal("Suggestion submitted successfully. You can see it here: "
+                                    + message.getJumpUrl())
+                            .queue();
 
-            // Error message
-        }, error -> event.getHook().editOriginal("The suggestion could not be submitted.").queue());
+                    // Error message
+                }, error -> event.getHook().editOriginal("The suggestion could not be submitted.").queue());
     }
 
     /**

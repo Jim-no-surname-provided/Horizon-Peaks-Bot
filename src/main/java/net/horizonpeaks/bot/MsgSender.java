@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import net.horizonpeaks.bot.data.CommandDefinition;
 import net.horizonpeaks.bot.data.Embed;
@@ -36,38 +37,89 @@ public final class MsgSender {
     /**
      * Renders and sends the configured response for a slash command.
      *
-     * @param command the command definition to render
-     * @param event   the slash command interaction that triggered the response
+     * @param command  the command definition to render
+     * @param event    the slash command interaction that triggered the response
+     * @param modifier if you want to modify the reply before it gets sent, you can
+     *                 do so by passing a modifyer
      */
     public static void render(CommandDefinition command, SlashCommandInteractionEvent event) {
-        // Make message reply
+        render(command, event, reply -> reply);
+    }
+
+    /**
+     * Renders and sends the configured response for a slash command.
+     *
+     * @param command  the command definition to render
+     * @param event    the slash command interaction that triggered the response
+     * @param modifier if you want to modify the reply before it gets sent, you can
+     *                 do so by passing a modifyer
+     */
+    public static void render(CommandDefinition command, SlashCommandInteractionEvent event,
+            UnaryOperator<ReplyCallbackAction> modifier) {
+        String text = resolve(command.text(), event);
+        List<FileUpload> files = new ArrayList<>();
+        List<MessageEmbed> embeds = new ArrayList<>();
+
+        // Render embeds
+        if (command.embeds() != null) {
+            for (Embed embed : command.embeds()) {
+                MessageEmbed rendered = renderEmbed(embed, value -> resolve(value, event), files);
+
+                if (rendered.getLength() > MessageEmbed.EMBED_MAX_LENGTH_BOT) {
+                    event.reply("One of the configured embeds is too long. Split its content across multiple embeds.")
+                            .setEphemeral(true).queue();
+                    return;
+                }
+
+                embeds.add(rendered);
+            }
+        }
+
+        // Split embeds into messages under Discord's combined embed limit
+        List<List<MessageEmbed>> batches = new ArrayList<>();
+        List<MessageEmbed> current = new ArrayList<>();
+        int currentLength = 0;
+
+        for (MessageEmbed embed : embeds) {
+            if (currentLength + embed.getLength() > MessageEmbed.EMBED_MAX_LENGTH_BOT
+                    || current.size() >= 10) {
+                batches.add(current);
+                current = new ArrayList<>();
+                currentLength = 0;
+            }
+
+            current.add(embed);
+            currentLength += embed.getLength();
+        }
+
+        if (!current.isEmpty()) {
+            batches.add(current);
+        }
+
+        // Send the first message through the interaction reply
         ReplyCallbackAction reply = event.deferReply();
 
-        // Add text
-        String text = resolve(command.text(), event);
         if (text != null && !text.isBlank()) {
             reply = reply.setContent(text);
         }
 
-        List<FileUpload> files = new ArrayList<>();
-
-        // Add embeds
-        if (command.embeds() != null) {
-            List<MessageEmbed> embeds = new ArrayList<>();
-
-            for (Embed embed : command.embeds()) {
-                embeds.add(renderEmbed(embed, value -> resolve(value, event), files));
-            }
-
-            reply = reply.addEmbeds(embeds);
+        if (!batches.isEmpty()) {
+            reply = reply.addEmbeds(batches.getFirst());
         }
 
         if (!files.isEmpty()) {
             reply = reply.addFiles(files);
         }
 
-        // Send
-        reply.queue();
+        // Allow actions to add buttons or otherwise modify the reply
+        reply = modifier.apply(reply);
+
+        reply.queue(hook -> {
+            // Send remaining embed batches as follow-ups
+            for (int i = 1; i < batches.size(); i++) {
+                hook.sendMessageEmbeds(batches.get(i)).queue();
+            }
+        });
     }
 
     /**

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.horizonpeaks.bot.actions.Action;
 import net.horizonpeaks.bot.actions.suggestions.Suggestion.Status;
+import net.horizonpeaks.bot.data.CommandDefinition;
 
 /**
  * Base action for manually changing the status of a suggestion from its
@@ -41,10 +42,11 @@ public abstract class Move implements Action {
      * parsed as a suggestion.
      * </p>
      *
+     * @param command the command calling this action
      * @param event the slash command interaction
      */
     @Override
-    public void act(SlashCommandInteractionEvent event) {
+    public void act(CommandDefinition command, SlashCommandInteractionEvent event) {
         // Only allow this command inside a suggestion thread
         if (!(event.getChannel() instanceof ThreadChannel thread)) {
             event.reply("This command can only be used inside a thread").setEphemeral(true).queue();

@@ -3,6 +3,7 @@ package net.horizonpeaks.bot;
 import java.util.List;
 
 import net.horizonpeaks.bot.actions.Welcome;
+import net.horizonpeaks.bot.actions.suggestions.Modal;
 import net.horizonpeaks.bot.actions.suggestions.Submission;
 import net.horizonpeaks.bot.actions.suggestions.Voting;
 import net.horizonpeaks.bot.data.CommandDefinition;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -38,7 +40,7 @@ public final class BotListener extends ListenerAdapter {
      * configuration.
      *
      * @param commands command definitions loaded from {@code commands.yaml}
-     * @param config general bot configuration
+     * @param config   general bot configuration
      */
     public BotListener(List<CommandDefinition> commands, Config config) {
         this.commands = commands;
@@ -63,7 +65,7 @@ public final class BotListener extends ListenerAdapter {
             }
 
             if (command.action() != null) {
-                command.action().act(event);
+                command.action().act(command, event);
                 return;
             }
 
@@ -146,5 +148,24 @@ public final class BotListener extends ListenerAdapter {
         }
 
         event.getGuild().addRoleToMember(member, memberRole).queue();
+    }
+
+    /**
+     * Handles button interactions used to start suggestion submission.
+     *
+     * <p>
+     * Clicking the suggestion creation button opens the same submission modal
+     * used by the suggestion slash command.
+     * </p>
+     *
+     * @param event the button interaction
+     */
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        if (event.getComponentId().equals("suggestion:create")) {
+            net.dv8tion.jda.api.modals.Modal modal = Modal.buildModal();
+            event.replyModal(modal).queue();
+            return;
+        }
     }
 }

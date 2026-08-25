@@ -513,7 +513,8 @@ public class Suggestion {
             name = name.substring(0, 100);
         }
 
-        msg.createThreadChannel(name).queue();
+        msg.createThreadChannel(name)
+                .queue(thread -> thread.sendMessage("Use this thread to discuss the suggestion.").queue());
     }
 
     /**
