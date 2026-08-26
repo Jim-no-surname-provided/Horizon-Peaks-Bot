@@ -8,11 +8,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import net.dv8tion.jda.api.components.ModalTopLevelComponent;
+import net.dv8tion.jda.api.components.checkbox.Checkbox;
+import net.dv8tion.jda.api.components.checkboxgroup.CheckboxGroup;
 import net.dv8tion.jda.api.components.label.Label;
+import net.dv8tion.jda.api.components.label.LabelChildComponent;
 import net.dv8tion.jda.api.components.textdisplay.TextDisplay;
 import net.dv8tion.jda.api.components.textinput.TextInput;
 import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.modals.Modal;
+import net.horizonpeaks.bot.PlaceholderResolver;
 
 /**
  * Defines a Discord modal and its input fields.
@@ -41,10 +46,19 @@ public record ModalDefinition(
     public record ModalField(
             String id,
             String label,
-            TextInputStyle style,
+            ModalFieldType style,
             @Nullable String placeholder,
             @Nullable Integer maxLength,
             @Nullable Boolean required) {
+    }
+
+    /**
+     * Describes the type of input rendered for a modal field.
+     */
+    public enum ModalFieldType {
+        SHORT_TEXT,
+        LONG_TEXT,
+        CHECKBOX
     }
 
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
@@ -78,33 +92,85 @@ public record ModalDefinition(
      * @return the Discord modal
      */
     public Modal toModal() {
-        var builder = net.dv8tion.jda.api.modals.Modal.create(id, title);
+        Modal.Builder builder = Modal.create(id, PlaceholderResolver.resolveConfig(title));
 
         // Add optional text above the form
         if (text != null) {
-            builder.addComponents(TextDisplay.of(text));
+            builder.addComponents(TextDisplay.of(PlaceholderResolver.resolveConfig(text)));
         }
 
         // Build each configured input field
         for (ModalField field : fields) {
-            TextInput.Builder input = TextInput.create(field.id(), field.style());
-
-            if (field.placeholder() != null) {
-                input.setPlaceholder(field.placeholder());
+            switch (field.style()) {
+                case SHORT_TEXT:
+                    builder.addComponents(getTextLabel(field, TextInputStyle.SHORT));
+                    break;
+                case LONG_TEXT:
+                    builder.addComponents(getTextLabel(field, TextInputStyle.PARAGRAPH));
+                    break;
+                case CHECKBOX:
+                    builder.addComponents(getCheckBoxLabel(field));
+                    break;
             }
-
-            if (field.maxLength() != null) {
-                input.setMaxLength(field.maxLength());
-            }
-
-            if (field.required() != null) {
-                input.setRequired(field.required());
-            }
-
-            builder.addComponents(Label.of(field.label(), input.build()));
         }
 
         return builder.build();
+    }
+
+    /**
+     * Builds the checkbox component for a modal field.
+     *
+     * <p>
+     * Required checkboxes are represented as a single-option checkbox group,
+     * because Discord does not support required standalone checkboxes.
+     * </p>
+     *
+     * @param field the modal field definition
+     * @return the labeled checkbox component
+     */
+    private ModalTopLevelComponent getCheckBoxLabel(ModalField field) {
+        String resolvedLabel = PlaceholderResolver.resolveConfig(field.label());
+        LabelChildComponent checkbox;
+
+        // Use a checkbox group when the user must explicitly confirm the option
+        if (Boolean.TRUE.equals(field.required())) {
+            checkbox = CheckboxGroup.create(field.id())
+                    .addOption(resolvedLabel, "accepted")
+                    .setRequired(true)
+                    .build();
+        } else {
+            checkbox = Checkbox.of(field.id());
+        }
+
+        return Label.of(resolvedLabel, checkbox);
+    }
+
+    /**
+     * Builds a labeled text input for a modal field.
+     *
+     * @param field the modal field definition
+     * @param style the Discord text input style
+     * @return the labeled text input component
+     */
+    private Label getTextLabel(ModalField field, TextInputStyle style) {
+        TextInput.Builder input = TextInput.create(field.id(), style);
+
+        // Apply optional input constraints
+        if (field.placeholder() != null) {
+            input.setPlaceholder(PlaceholderResolver.resolveConfig(field.placeholder()));
+        }
+
+        if (field.maxLength() != null) {
+            input.setMaxLength(field.maxLength());
+        }
+
+        if (field.required() != null) {
+            input.setRequired(field.required());
+        }
+
+        return Label.of(
+                PlaceholderResolver.resolveConfig(field.label()),
+                input.build());
     }
 
 }

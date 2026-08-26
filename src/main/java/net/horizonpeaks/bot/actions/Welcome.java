@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.horizonpeaks.bot.Config;
 import net.horizonpeaks.bot.MsgSender;
+import net.horizonpeaks.bot.PlaceholderResolver;
 import net.horizonpeaks.bot.data.Embed;
 import net.horizonpeaks.bot.data.FileLoader;
 
@@ -44,7 +45,7 @@ public class Welcome {
 
     private static String resolve(String value, GuildMemberJoinEvent event) {
 
-        String resolved = MsgSender.resolveConfig(value);
+        String resolved = PlaceholderResolver.resolveConfig(value);
 
         if (resolved == null) {
             return null;

@@ -15,15 +15,15 @@
 # The button listener looks for the `modal:` prefix, finds the modal with the
 # matching ID, builds it, and opens it.
 #
-# Fields are rendered as Discord text inputs. Supported styles are SHORT and
-# PARAGRAPH. Optional properties such as placeholder, maxLength, and required
+# Fields are rendered as Discord text inputs. Supported styles are SHORT_TEXT and
+# LONG_TEXT. Optional properties such as placeholder, maxLength, and required
 # may be omitted to use JDA's defaults.
 #
 # Config placeholders such as %suggestions.initialDays% may be used in modal
 # text and other supported strings and are resolved when the modal is built.
 
-suggestion:
-  id: "modal:suggestion:create"
+
+- id: "modal:suggestion:create"
   title: "Submit a Suggestion"
   text: |
     **Before submitting, please note:**
@@ -38,28 +38,65 @@ suggestion:
   fields:
     - id: "title"
       label: "Title"
-      style: short
+      style: SHORT_TEXT
       placeholder: "A short title for your suggestion"
       maxLength: 100
       required: true
 
     - id: "description"
       label: "Description"
-      style: paragraph
+      style: LONG_TEXT
       placeholder: "Describe your suggestion in detail"
       maxLength: 1024
       required: true
 
     - id: "image"
       label: "Image URL (optional)"
-      style: short
+      style: SHORT_TEXT
       placeholder: "https://example.com/image.png"
       maxLength: 256
       required: false
 
     - id: "examples"
       label: "Examples (optional)"
-      style: paragraph
+      style: LONG_TEXT
       placeholder: "Text examples or links to illustrate your idea"
       maxLength: 1024
       required: false
+
+- id: "modal:application:create"
+  title: "Apply to Horizon Peaks"
+
+  text: |
+    ## Before applying
+
+    • Be respectful toward other members
+    • No hate speech, harassment, griefing, stealing, or cheating
+    • Keep the community safe and SFW
+    • Follow staff instructions and use common sense
+    • You must meet the server's age requirement
+
+    Please read the full rules before submitting your application.
+
+  fields:
+    # checkbox goes here once ModalDefinition supports it
+
+    - id: "age"
+      label: "How old are you?"
+      style: SHORT_TEXT_TEXT
+      maxLength: 3
+      required: true
+
+    - id: "minecraftName"
+      label: "Minecraft username"
+      style: SHORT_TEXT
+      placeholder: "Your Java Edition username"
+      maxLength: 16
+      required: true
+
+    - id: "heardFrom"
+      label: "Where did you hear about us? If reddit, which subreddit?"
+      style: SHORT_TEXT
+      placeholder: "Reddit, friend, Discord, etc."
+      maxLength: 100
+      required: true

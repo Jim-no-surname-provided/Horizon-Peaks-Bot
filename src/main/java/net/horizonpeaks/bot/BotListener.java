@@ -2,6 +2,8 @@ package net.horizonpeaks.bot;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import net.horizonpeaks.bot.actions.Welcome;
 import net.horizonpeaks.bot.actions.suggestions.Submission;
 import net.horizonpeaks.bot.actions.suggestions.Voting;
@@ -72,7 +74,13 @@ public final class BotListener extends ListenerAdapter {
             }
 
             if (command.modalId() != null) {
-                event.replyModal(getModalDef(command.modalId()).toModal()).queue();
+                ModalDefinition modal = getModalDef(command.modalId());
+
+                if (modal == null) {
+                    throw new IllegalStateException("Unknown modal: " + command.modalId());
+                }
+
+                event.replyModal(modal.toModal()).queue();
                 return;
             }
 
@@ -94,7 +102,7 @@ public final class BotListener extends ListenerAdapter {
      */
     @Override
     public void onModalInteraction(ModalInteractionEvent event) {
-        if (event.getModalId().equals("suggestion:submit")) {
+        if (event.getModalId().equals("modal:suggestion:create")) {
             Submission.submit(event);
             return;
         }
@@ -194,7 +202,7 @@ public final class BotListener extends ListenerAdapter {
      * @param id the modal interaction ID
      * @return the matching modal definition, or {@code null} if none exists
      */
-    private ModalDefinition getModalDef(String id) {
+    private @Nullable ModalDefinition getModalDef(String id) {
         // Find and open the requested modal
         for (ModalDefinition modal : modals) {
             if (modal.id().equals(id)) {
