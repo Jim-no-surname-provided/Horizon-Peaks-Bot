@@ -426,3 +426,21 @@
   - administrator
   description: Reopen a resolved suggestion from the discussion thread
   action: suggestions.Reopen
+
+
+- name: application-info
+  permissions:
+    - administrator
+  description: Send the application information and apply button
+  embeds:
+    - title: "Apply to %branding.name%! 📝"
+      description: |
+        Click the button below to start your application.
+
+        The form contains 4 short questions. Once submitted, a staff member will review your application and may ask a few follow-up questions.
+
+        You will be notified once a decision has been made.
+
+        Please make sure you have read the rules in #rules before applying.
+      color: "%colors.brand%"
+  action: application.Info
