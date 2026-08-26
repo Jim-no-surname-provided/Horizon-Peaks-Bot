@@ -25,10 +25,10 @@ public class Welcome {
         try {
 
             welcome = yamlMapper.readValue(
-                    FileLoader.getOrCreate("messages/welcome.yaml", "messages/welcome.yaml").toFile(), Embed.class);
+                    FileLoader.getOrCreate("definitions/welcome.yaml", "definitions/welcome.yaml").toFile(), Embed.class);
 
         } catch (IOException e) {
-            System.err.println("File messages/welcome.yaml doesn't exist.");
+            System.err.println("File definitions/welcome.yaml doesn't exist.");
             return;
         }
 

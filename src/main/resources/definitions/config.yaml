@@ -32,6 +32,7 @@ channels:
   activeSuggestions: "1479251853219860602"
   approvedSuggestions: "1479251856181170307"
   deniedSuggestions: "1479251859007869121"
+  rules: "1479251600965894255"
 
 suggestions:
   initialDays: 7

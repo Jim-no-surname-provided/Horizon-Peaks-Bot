@@ -248,7 +248,7 @@
       value: Show this help message
       inline: false
     - name: /suggestion
-      value: Submit a community suggestion. This can be used in \#📝｜suggestions .
+      value: Submit a community suggestion. This can be used in <#%channels.rules%> .
       inline: false
 
 - name: rules
@@ -441,6 +441,6 @@
 
         You will be notified once a decision has been made.
 
-        Please make sure you have read the rules in #rules before applying.
+        Please make sure you have read the rules in <#%channels.rules%>  before applying.
       color: "%colors.brand%"
   action: application.Info

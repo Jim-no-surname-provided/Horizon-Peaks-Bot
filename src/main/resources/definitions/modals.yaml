@@ -38,28 +38,28 @@
   fields:
     - id: "title"
       label: "Title"
-      style: SHORT_TEXT
+      type: SHORT_TEXT
       placeholder: "A short title for your suggestion"
       maxLength: 100
       required: true
 
     - id: "description"
       label: "Description"
-      style: LONG_TEXT
+      type: LONG_TEXT
       placeholder: "Describe your suggestion in detail"
       maxLength: 1024
       required: true
 
     - id: "image"
       label: "Image URL (optional)"
-      style: SHORT_TEXT
+      type: SHORT_TEXT
       placeholder: "https://example.com/image.png"
       maxLength: 256
       required: false
 
     - id: "examples"
       label: "Examples (optional)"
-      style: LONG_TEXT
+      type: LONG_TEXT
       placeholder: "Text examples or links to illustrate your idea"
       maxLength: 1024
       required: false
@@ -76,27 +76,31 @@
     • Follow staff instructions and use common sense
     • You must meet the server's age requirement
 
-    Please read the full rules in #rules before submitting your application.
+    Please read the full rules in <#%channels.rules%> before submitting your application.
 
   fields:
-    # checkbox goes here once ModalDefinition supports it
+    - id: "rulesAccepted"
+      label: "Rules"
+      type: CHECKBOX
+      optionLabel: "I have read and agree to the full server rules"
+      required: true
 
     - id: "age"
       label: "How old are you?"
-      style: SHORT_TEXT_TEXT
+      type: SHORT_TEXT
       maxLength: 3
       required: true
 
     - id: "minecraftName"
       label: "Minecraft username"
-      style: SHORT_TEXT
+      type: SHORT_TEXT
       placeholder: "Your Java Edition username"
       maxLength: 16
       required: true
 
     - id: "heardFrom"
-      label: "Where did you hear about us? If reddit, which subreddit?"
-      style: SHORT_TEXT
-      placeholder: "Reddit, friend, Discord, etc."
+      label: "Where did you hear about us?"
+      type: SHORT_TEXT
+      placeholder: "r/MinecraftServer, friend, Discord, etc."
       maxLength: 100
       required: true

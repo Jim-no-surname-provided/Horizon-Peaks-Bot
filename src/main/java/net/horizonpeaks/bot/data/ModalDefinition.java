@@ -38,7 +38,7 @@ public record ModalDefinition(
      *
      * @param id          the field interaction ID
      * @param label       the field label
-     * @param style       the input style
+     * @param type        the input type
      * @param placeholder optional placeholder text
      * @param maxLength   optional maximum input length
      * @param required    whether the field is required
@@ -46,7 +46,8 @@ public record ModalDefinition(
     public record ModalField(
             String id,
             String label,
-            ModalFieldType style,
+            ModalFieldType type,
+            @Nullable String optionLabel,
             @Nullable String placeholder,
             @Nullable Integer maxLength,
             @Nullable Boolean required) {
@@ -101,7 +102,7 @@ public record ModalDefinition(
 
         // Build each configured input field
         for (ModalField field : fields) {
-            switch (field.style()) {
+            switch (field.type()) {
                 case SHORT_TEXT:
                     builder.addComponents(getTextLabel(field, TextInputStyle.SHORT));
                     break;
@@ -129,20 +130,21 @@ public record ModalDefinition(
      * @return the labeled checkbox component
      */
     private ModalTopLevelComponent getCheckBoxLabel(ModalField field) {
-        String resolvedLabel = PlaceholderResolver.resolveConfig(field.label());
         LabelChildComponent checkbox;
 
         // Use a checkbox group when the user must explicitly confirm the option
         if (Boolean.TRUE.equals(field.required())) {
             checkbox = CheckboxGroup.create(field.id())
-                    .addOption(resolvedLabel, "accepted")
+                    .addOption(
+                            PlaceholderResolver.resolveConfig(field.optionLabel()),
+                            "accepted")
                     .setRequired(true)
                     .build();
         } else {
             checkbox = Checkbox.of(field.id());
         }
 
-        return Label.of(resolvedLabel, checkbox);
+        return Label.of(PlaceholderResolver.resolveConfig(field.label()), checkbox);
     }
 
     /**

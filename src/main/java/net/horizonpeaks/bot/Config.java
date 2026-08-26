@@ -121,7 +121,8 @@ public record Config(
             String communityInfo,
             String activeSuggestions,
             String approvedSuggestions,
-            String deniedSuggestions) {
+            String deniedSuggestions,
+            String rules) {
     }
 
     /**

@@ -38,6 +38,7 @@ public class PlaceholderResolver {
                 .replace("%channels.activeSuggestions%", config.channels().activeSuggestions())
                 .replace("%channels.approvedSuggestions%", config.channels().approvedSuggestions())
                 .replace("%channels.deniedSuggestions%", config.channels().deniedSuggestions())
+                .replace("%channels.rules%", config.channels().rules())
 
                 .replace("%suggestions.initialDays%", String.valueOf(config.suggestions().initialDays()))
                 .replace("%suggestions.minimumVotes%", String.valueOf(config.suggestions().minimumVotes()))
