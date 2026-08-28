@@ -39,8 +39,8 @@ public final class MsgSender {
      * @param modifier if you want to modify the reply before it gets sent, you can
      *                 do so by passing a modifyer
      */
-    public static void render(CommandDefinition command, SlashCommandInteractionEvent event) {
-        render(command, event, reply -> reply);
+    public static void renderAndSend(CommandDefinition command, SlashCommandInteractionEvent event) {
+        renderAndSend(command, event, reply -> reply);
     }
 
     /**
@@ -51,7 +51,7 @@ public final class MsgSender {
      * @param modifier if you want to modify the reply before it gets sent, you can
      *                 do so by passing a modifyer
      */
-    public static void render(CommandDefinition command, SlashCommandInteractionEvent event,
+    public static void renderAndSend(CommandDefinition command, SlashCommandInteractionEvent event,
             UnaryOperator<ReplyCallbackAction> modifier) {
         String text = PlaceholderResolver.resolve(command.text(), event);
         List<FileUpload> files = new ArrayList<>();

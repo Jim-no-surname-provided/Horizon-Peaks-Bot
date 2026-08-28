@@ -11,7 +11,7 @@ public class Info implements Action {
 
     @Override
     public void act(CommandDefinition command, SlashCommandInteractionEvent event) {
-        MsgSender.render(command, event,
+        MsgSender.renderAndSend(command, event,
                 reply -> reply.addComponents(
                         ActionRow.of(Button.primary("modal:application:create", "Apply"))));
     }

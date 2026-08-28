@@ -1,6 +1,7 @@
 package net.horizonpeaks.bot.data;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
 
@@ -39,6 +40,7 @@ public record ModalDefinition(
      * @param id          the field interaction ID
      * @param label       the field label
      * @param type        the input type
+     * @param optionLabel optional text displayed next to a checkbox option
      * @param placeholder optional placeholder text
      * @param maxLength   optional maximum input length
      * @param required    whether the field is required
@@ -57,23 +59,35 @@ public record ModalDefinition(
      * Describes the type of input rendered for a modal field.
      */
     public enum ModalFieldType {
+
+        /**
+         * A single-line text input.
+         */
         SHORT_TEXT,
+
+        /**
+         * A multi-line text input.
+         */
         LONG_TEXT,
+
+        /**
+         * A checkbox input.
+         */
         CHECKBOX
     }
 
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
 
     /**
-     * Parses a YAML document containing a list of command definitions.
+     * Parses a YAML document containing a list of modal definitions.
      *
      * <p>
      * YAML property names are automatically matched to the corresponding
      * record components by Jackson.
      * </p>
      *
-     * @param yaml the contents of {@code commands.yaml}
-     * @return the parsed modals
+     * @param yaml the contents of {@code modals.yaml}
+     * @return the parsed modal definitions
      * @throws IllegalArgumentException if the YAML cannot be parsed
      */
     public static List<ModalDefinition> fromYaml(String yaml) {
@@ -112,6 +126,39 @@ public record ModalDefinition(
                 case CHECKBOX:
                     builder.addComponents(getCheckBoxLabel(field));
                     break;
+            }
+        }
+
+        return builder.build();
+    }
+
+    /**
+     * Builds the Discord modal with default values for configured text fields.
+     *
+     * <p>
+     * Values are matched to fields by their interaction ID. Fields without a
+     * matching value are left empty.
+     * </p>
+     *
+     * @param values the default values indexed by field ID
+     * @return the Discord modal
+     */
+    public Modal toModalWithDefaults(Map<String, String> values) {
+        Modal.Builder builder = Modal.create(id, PlaceholderResolver.resolveConfig(title));
+
+        if (text != null) {
+            builder.addComponents(TextDisplay.of(PlaceholderResolver.resolveConfig(text)));
+        }
+
+        for (ModalField field : fields) {
+            switch (field.type()) {
+                case SHORT_TEXT -> builder.addComponents(
+                        getTextLabelWithDefaults(field, TextInputStyle.SHORT, values.get(field.id())));
+
+                case LONG_TEXT -> builder.addComponents(
+                        getTextLabelWithDefaults(field, TextInputStyle.PARAGRAPH, values.get(field.id())));
+
+                case CHECKBOX -> builder.addComponents(getCheckBoxLabel(field));
             }
         }
 
@@ -158,6 +205,39 @@ public record ModalDefinition(
         TextInput.Builder input = TextInput.create(field.id(), style);
 
         // Apply optional input constraints
+        if (field.placeholder() != null) {
+            input.setPlaceholder(PlaceholderResolver.resolveConfig(field.placeholder()));
+        }
+
+        if (field.maxLength() != null) {
+            input.setMaxLength(field.maxLength());
+        }
+
+        if (field.required() != null) {
+            input.setRequired(field.required());
+        }
+
+        return Label.of(
+                PlaceholderResolver.resolveConfig(field.label()),
+                input.build());
+    }
+
+    /**
+     * Builds a labeled text input with an optional default value.
+     *
+     * @param field the modal field definition
+     * @param style the Discord text input style
+     * @param value the optional value used to prefill the input
+     * @return the labeled text input component
+     */
+    private Label getTextLabelWithDefaults(ModalField field, TextInputStyle style, @Nullable String value) {
+
+        TextInput.Builder input = TextInput.create(field.id(), style);
+
+        if (value != null) {
+            input.setValue(value);
+        }
+
         if (field.placeholder() != null) {
             input.setPlaceholder(PlaceholderResolver.resolveConfig(field.placeholder()));
         }

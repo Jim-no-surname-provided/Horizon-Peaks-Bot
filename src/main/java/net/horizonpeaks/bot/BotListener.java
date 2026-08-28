@@ -4,14 +4,11 @@ import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 
-import net.horizonpeaks.bot.actions.Welcome;
+import net.horizonpeaks.bot.actions.application.ApplicationHandler;
 import net.horizonpeaks.bot.actions.suggestions.Submission;
 import net.horizonpeaks.bot.actions.suggestions.Voting;
 import net.horizonpeaks.bot.data.CommandDefinition;
 import net.horizonpeaks.bot.data.ModalDefinition;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -84,7 +81,7 @@ public final class BotListener extends ListenerAdapter {
                 return;
             }
 
-            MsgSender.render(command, event);
+            MsgSender.renderAndSend(command, event);
             return;
 
         }
@@ -104,6 +101,10 @@ public final class BotListener extends ListenerAdapter {
     public void onModalInteraction(ModalInteractionEvent event) {
         if (event.getModalId().equals("modal:suggestion:create")) {
             Submission.submit(event);
+            return;
+        }
+        if (event.getModalId().equals("modal:application:create")) {
+            ApplicationHandler.confirmMessage(event);
             return;
         }
     }
@@ -133,39 +134,6 @@ public final class BotListener extends ListenerAdapter {
     }
 
     /**
-     * Handles members joining the guild.
-     *
-     * <p>
-     * New members receive the configured member role and are greeted with the
-     * configured welcome message.
-     * </p>
-     *
-     * @param event the member-join event
-     */
-    @Override
-    public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        Welcome.welcome(event);
-        assignMemberRole(event);
-    }
-
-    /**
-     * Assigns the configured member role to a newly joined member.
-     *
-     * @param event the member-join event
-     * @throws IllegalStateException if the configured member role does not exist
-     */
-    private void assignMemberRole(GuildMemberJoinEvent event) {
-        Member member = event.getMember();
-        Role memberRole = event.getGuild().getRoleById(Config.get().roles().member());
-
-        if (memberRole == null) {
-            throw new IllegalStateException("Configured member role does not exist");
-        }
-
-        event.getGuild().addRoleToMember(member, memberRole).queue();
-    }
-
-    /**
      * Handles button interactions used to start suggestion submission.
      *
      * <p>
@@ -183,17 +151,20 @@ public final class BotListener extends ListenerAdapter {
             event.replyModal(getModalDef(id).toModal()).queue();
         }
 
-        if (id.startsWith("application:accept:")) {
-            // Handle application acceptance
+        if (id.equals("application:submit")) {
+            ApplicationHandler.submit(event);
         }
 
-        if (id.startsWith("application:deny:")) {
-            // Handle application denial
+        if (id.equals("application:change_name")) {
+            ApplicationHandler.changeMcName(event, getModalDef("modal:application:create"));
+        }
+        if (id.equals("application:accept")) {
+            ApplicationHandler.accept(event);
+        }
+        if (id.equals("application:reject")) {
+            ApplicationHandler.reject(event);
         }
 
-        if (id.startsWith("application:interview:")) {
-            // Handle application interview
-        }
     }
 
     /**

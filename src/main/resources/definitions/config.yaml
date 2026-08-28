@@ -33,9 +33,13 @@ channels:
   approvedSuggestions: "1479251856181170307"
   deniedSuggestions: "1479251859007869121"
   rules: "1479251600965894255"
+  applicationApply: "1542957281820549240"
+  applicationReview: "1542977769632440351"
 
 suggestions:
   initialDays: 7
   minimumVotes: 7
   extensionDays: 3
   maxActivePerUser: 2
+
+minimumAge: 16

@@ -28,7 +28,8 @@ public record Config(
         Colors colors,
         Images images,
         Channels channels,
-        Suggestions suggestions) {
+        Suggestions suggestions,
+        int minimumAge) {
 
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
     private static Config instance;
@@ -122,7 +123,12 @@ public record Config(
             String activeSuggestions,
             String approvedSuggestions,
             String deniedSuggestions,
-            String rules) {
+            String rules,
+            String applicationApply,
+            String applicationReview,
+            String smpConsole,
+            String cmpConsole
+    ) {
     }
 
     /**

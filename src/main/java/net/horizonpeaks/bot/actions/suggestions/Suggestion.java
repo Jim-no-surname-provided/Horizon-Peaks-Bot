@@ -22,6 +22,8 @@ import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.horizonpeaks.bot.Config;
 
 /**
@@ -180,6 +182,59 @@ public class Suggestion {
             @Nullable String examples, Member author, @Nullable String reason, Status status,
             OffsetDateTime submittedAt) {
         this(jda, id, title, description, image, examples, author, reason, status, submittedAt, null, 0, 0);
+    }
+
+    /**
+     * Creates a suggestion from a submitted suggestion modal.
+     *
+     * @param event the submitted modal interaction
+     * @param id    the suggestion ID
+     * @return the parsed suggestion
+     * @throws IllegalArgumentException if required modal values are missing
+     */
+    public static Suggestion fromModal(ModalInteractionEvent event, int id) {
+        ModalMapping titleModal = event.getValue("title");
+        ModalMapping descriptionModal = event.getValue("description");
+
+        if (titleModal == null || descriptionModal == null) {
+            throw new IllegalArgumentException("Suggestion form is missing required values");
+        }
+
+        Member member = event.getMember();
+
+        if (member == null) {
+            throw new IllegalArgumentException("Suggestion must be submitted from a guild");
+        }
+
+        String title = titleModal.getAsString();
+        String description = descriptionModal.getAsString();
+
+        // Read optional fields
+        @Nullable
+        String image = getOptionalModalValue(event, "image");
+
+        @Nullable
+        String examples = getOptionalModalValue(event, "examples");
+
+        return new Suggestion(event.getJDA(), id, title, description, image, examples, member, null, Status.OPEN,
+                event.getTimeCreated());
+    }
+
+    /**
+     * Reads an optional text value from a modal.
+     *
+     * @param event the submitted modal interaction
+     * @param id    the modal field ID
+     * @return the submitted value, or {@code null} if missing or blank
+     */
+    private static @Nullable String getOptionalModalValue(ModalInteractionEvent event, String id) {
+        ModalMapping mapping = event.getValue(id);
+
+        if (mapping == null || mapping.getAsString().isBlank()) {
+            return null;
+        }
+
+        return mapping.getAsString();
     }
 
     /**
@@ -365,8 +420,7 @@ public class Suggestion {
         String value = getOptionalField(embed, name);
 
         if (value == null) {
-            throw new IllegalArgumentException(
-                    "Suggestion is missing field: " + name);
+            throw new IllegalArgumentException("Suggestion is missing field: " + name);
         }
 
         return value;

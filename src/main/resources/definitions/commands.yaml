@@ -60,7 +60,8 @@
 #
 #   action
 #     Runs custom Java behavior for commands that cannot be represented
-#     entirely through YAML.
+#     entirely through YAML. Here you define a class in the actions package
+#     that implements the interface Action.
 #
 #     Action names are relative to the bot's actions package.
 #
@@ -433,7 +434,9 @@
     - administrator
   description: Send the application information and apply button
   embeds:
-    - title: "Apply to %branding.name%! 📝"
+    - color: '%colors.brand%'
+      image: '%branding.banner%'
+      title: "Apply to %branding.name%! 📝"
       description: |
         Click the button below to start your application.
 
@@ -442,5 +445,4 @@
         You will be notified once a decision has been made.
 
         Please make sure you have read the rules in <#%channels.rules%>  before applying.
-      color: "%colors.brand%"
   action: application.Info

@@ -79,22 +79,16 @@
     Please read the full rules in <#%channels.rules%> before submitting your application.
 
   fields:
-    - id: "rulesAccepted"
-      label: "Rules"
-      type: CHECKBOX
-      optionLabel: "I have read and agree to the full server rules"
-      required: true
-
     - id: "age"
       label: "How old are you?"
       type: SHORT_TEXT
       maxLength: 3
       required: true
 
-    - id: "minecraftName"
+    - id: "mcName"
       label: "Minecraft username"
       type: SHORT_TEXT
-      placeholder: "Your Java Edition username"
+      placeholder: "Your Minecraft username"
       maxLength: 16
       required: true
 
@@ -102,5 +96,12 @@
       label: "Where did you hear about us?"
       type: SHORT_TEXT
       placeholder: "r/MinecraftServer, friend, Discord, etc."
+      maxLength: 100
+      required: true
+      
+    - id: "favoriteThing"
+      label: "What's your favorite thing in Minecraft?"
+      type: LONG_TEXT
+      placeholder: "Tell us more about you"
       maxLength: 100
       required: true

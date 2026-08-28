@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.horizonpeaks.bot.Config;
 import net.horizonpeaks.bot.MsgSender;
 import net.horizonpeaks.bot.PlaceholderResolver;
@@ -19,7 +18,7 @@ import net.horizonpeaks.bot.data.FileLoader;
 
 public class Welcome {
 
-    public static void welcome(GuildMemberJoinEvent event) {
+    public static void welcome(Member member) {
         Embed welcome;
         ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
         try {
@@ -32,9 +31,9 @@ public class Welcome {
             return;
         }
 
-        MessageEmbed embed = MsgSender.renderEmbed(welcome, value -> resolve(value, event), new ArrayList<>());
+        MessageEmbed embed = MsgSender.renderEmbed(welcome, value -> resolve(value, member), new ArrayList<>());
 
-        TextChannel channel = event.getGuild().getTextChannelById(Config.get().channels().welcome());
+        TextChannel channel = member.getGuild().getTextChannelById(Config.get().channels().welcome());
 
         if (channel == null) {
             throw new IllegalStateException("Configured welcome channel does not exist");
@@ -43,7 +42,7 @@ public class Welcome {
         channel.sendMessageEmbeds(embed).queue();
     }
 
-    private static String resolve(String value, GuildMemberJoinEvent event) {
+    private static String resolve(String value, Member member) {
 
         String resolved = PlaceholderResolver.resolveConfig(value);
 
@@ -51,8 +50,7 @@ public class Welcome {
             return null;
         }
 
-        Member member = event.getMember();
-        Guild guild = event.getGuild();
+        Guild guild = member.getGuild();
 
         return resolved
                 .replace("%member.name%", member.getUser().getName())

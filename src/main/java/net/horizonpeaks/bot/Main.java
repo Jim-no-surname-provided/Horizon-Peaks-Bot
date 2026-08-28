@@ -29,18 +29,19 @@ public final class Main {
         String guildId = environment.discordGuildId();
 
         // Load config
-        Config config = Config.fromYaml(FileLoader.readOrCreate("definitions/config.yaml", "definitions/config.yaml"));
+        Config config = Config.fromYaml(FileLoader.readOrCreate("definitions/config.yaml"));
 
         // Load commands
         List<CommandDefinition> commands = CommandDefinition.fromYaml(
-                FileLoader.readOrCreate("definitions/commands.yaml", "definitions/commands.yaml"));
+                FileLoader.readOrCreate("definitions/commands.yaml"));
 
         // Load commands
         List<ModalDefinition> modals = ModalDefinition.fromYaml(
-                FileLoader.readOrCreate("definitions/modals.yaml", "definitions/modals.yaml"));
+                FileLoader.readOrCreate("definitions/modals.yaml"));
 
-        // Load welcome.md
-        FileLoader.readOrCreate("definitions/welcome.yaml", "definitions/welcome.yaml");
+        // Load definitions and announcements
+        FileLoader.checkOrCreateDirectory("definitions");
+        FileLoader.checkOrCreateDirectory("announcements");
 
         // Build bot
         JDA jda;
