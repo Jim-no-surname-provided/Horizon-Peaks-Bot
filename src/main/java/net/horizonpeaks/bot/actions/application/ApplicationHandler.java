@@ -131,15 +131,19 @@ public class ApplicationHandler {
                             .openPrivateChannel()
                             .queue(channel -> channel.sendMessage(
                                     "Your application to **%s** has been accepted! 🎉"
-                                            .formatted(Config.get().branding().name())));
+                                            .formatted(Config.get()
+                                                    .branding()
+                                                    .name())));
 
-                    Welcome.welcome(member);
-
-                    TextChannel smpConsole = event.getGuild().getChannelById(TextChannel.class, Config.get().channels().smpConsole());
-                    TextChannel cmpConsole = event.getGuild().getChannelById(TextChannel.class, Config.get().channels().smpConsole());
+                    TextChannel smpConsole = event.getGuild().getChannelById(TextChannel.class,
+                            Config.get().channels().smpConsole());
+                    TextChannel cmpConsole = event.getGuild().getChannelById(TextChannel.class,
+                            Config.get().channels().cmpConsole());
 
                     smpConsole.sendMessage("whitelist add " + app.getMcName()).queue();
                     cmpConsole.sendMessage("whitelist add " + app.getMcName()).queue();
+                    
+                    Welcome.welcome(member);
                 },
                 error -> {
                     error.printStackTrace();
