@@ -82,7 +82,7 @@
     - id: "age"
       label: "How old are you?"
       type: SHORT_TEXT
-      maxLength: 3
+      maxLength: 10
       required: true
 
     - id: "mcName"

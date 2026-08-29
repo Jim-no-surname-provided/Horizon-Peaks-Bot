@@ -126,6 +126,7 @@ public record Config(
             String rules,
             String applicationApply,
             String applicationReview,
+            String applicationCategory,
             String smpConsole,
             String cmpConsole
     ) {

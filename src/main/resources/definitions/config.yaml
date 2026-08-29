@@ -35,6 +35,7 @@ channels:
   rules: "1479251600965894255"
   applicationApply: "1542957281820549240"
   applicationReview: "1542977769632440351"
+  applicationCategory: "1542957011413631176"
   smpConsole: "1479251936883511447"
   cmpConsole: "1479251940495065210"
 

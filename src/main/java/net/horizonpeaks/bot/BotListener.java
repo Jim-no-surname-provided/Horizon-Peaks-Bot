@@ -149,22 +149,25 @@ public final class BotListener extends ListenerAdapter {
 
         if (id.startsWith("modal:")) {
             event.replyModal(getModalDef(id).toModal()).queue();
-        }
-
-        if (id.equals("application:submit")) {
+            
+        } else if (id.equals("application:create")) {
+            ApplicationHandler.apply(event, getModalDef("modal:application:create"));
+            
+        } else if (id.equals("application:submit")) {
             ApplicationHandler.submit(event);
-        }
-
-        if (id.equals("application:change_name")) {
+            
+        } else if (id.equals("application:change_name")) {
             ApplicationHandler.changeMcName(event, getModalDef("modal:application:create"));
-        }
-        if (id.equals("application:accept")) {
+            
+        } else if (id.equals("application:accept")) {
             ApplicationHandler.accept(event);
-        }
-        if (id.equals("application:reject")) {
+            
+        } else if (id.equals("application:reject")) {
             ApplicationHandler.reject(event);
+            
+        } else if (id.equals("application:interview")) {
+            ApplicationHandler.startInterview(event);
         }
-
     }
 
     /**
